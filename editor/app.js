@@ -2,7 +2,9 @@
 
 const DEFAULT_SETTINGS = {
   mecanum: false,
-  invertMotors: false,
+  // Motors wired backwards, M1 M2 (left) M3 M4 (right). The right side is reversed
+  // on the car this was first tried on, compared with Adeept's published code.
+  invertWheels: [false, false, true, true],
   invertHead: false,
   startWithOk: false,
   cmps: 25,
@@ -40,6 +42,12 @@ function saveJSON(key, value) {
 }
 
 const settings = {...DEFAULT_SETTINGS, ...loadJSON('adeept.settings', {})};
+if ('invertMotors' in settings) {
+  // Older setting: all motors reversed at once.
+  if (settings.invertMotors)
+    settings.invertWheels = DEFAULT_SETTINGS.invertWheels.map(v => !v);
+  delete settings.invertMotors;
+}
 const $ = id => document.getElementById(id);
 
 // Toast
@@ -207,6 +215,8 @@ async function ensureConnected() {
       return false;
     }
     setStatus(true);
+    if (link.version < FIRMWARE_VERSION)
+      toast('Le programme de base de la voiture est ancien : mets-le à jour dans ⚙️ Réglages (étape 1).', 'error', 9000);
     return true;
   } catch (err) {
     setStatus(false);
@@ -275,13 +285,14 @@ $('fileInput').onchange = async e => {
 // Settings
 
 const NUM_SETTINGS = {setCmps: 'cmps', setMs90: 'ms90', setMoveSpeed: 'moveSpeed', setTurnSpeed: 'turnSpeed'};
-const BOOL_SETTINGS = {setMecanum: 'mecanum', setInvertMotors: 'invertMotors', setInvertHead: 'invertHead', setStartWithOk: 'startWithOk'};
+const BOOL_SETTINGS = {setMecanum: 'mecanum', setInvertHead: 'invertHead', setStartWithOk: 'startWithOk'};
 
 function fillSettings() {
   for (const [id, key] of Object.entries(NUM_SETTINGS))
     $(id).value = settings[key];
   for (const [id, key] of Object.entries(BOOL_SETTINGS))
     $(id).checked = settings[key];
+  settings.invertWheels.forEach((v, i) => { $('setWheel' + i).checked = v; });
 }
 
 function readSettings() {
@@ -296,6 +307,7 @@ function readSettings() {
   const wasMecanum = settings.mecanum;
   for (const [id, key] of Object.entries(BOOL_SETTINGS))
     settings[key] = $(id).checked;
+  settings.invertWheels = [0, 1, 2, 3].map(i => $('setWheel' + i).checked);
   if (wasMecanum !== settings.mecanum)
     ws.updateToolbox(buildToolbox(settings.mecanum));
   saveJSON('adeept.settings', settings);
@@ -347,6 +359,7 @@ async function calibrationTest(kind) {
 }
 $('btnTestMove').onclick = () => calibrationTest('move');
 $('btnTestTurn').onclick = () => calibrationTest('turn');
+$('btnTestWheels').onclick = () => calibrationTest('wheels');
 
 $('btnFlash').onclick = async () => {
   if (!CarLink.supported()) {

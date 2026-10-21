@@ -11,14 +11,14 @@
 //   11    turnSpeed, % of motor power for "turn N degrees"
 //   12    number of variables
 //   13    sum of the code bytes, modulo 256
-//   14-15 reserved
+//   14    wheels wired backwards: bit i for motor M(i+1) (M1, M2 left, M3, M4 right)
+//   15    reserved
 // Code follows. It is a stack machine on floats; jump targets are offsets in the code.
 #pragma once
 
 #define BC_VERSION 1
 #define BC_HEADER  16
 
-#define FLAG_INVERT_MOTORS 0x01
 #define FLAG_INVERT_HEAD   0x02
 #define FLAG_START_WITH_OK 0x04
 
@@ -62,6 +62,7 @@ enum {
   OP_DRIVE = 0x43,        // u8 DRIVE_*
   OP_SPEED = 0x44,        // pops %
   OP_MOTORS = 0x45,       // pops right %, left %
+  OP_WHEEL = 0x46,        // u8 motor 0..3; pops % (used by the wheel test)
 
   OP_BEEP = 0x50,
   OP_TONE = 0x51,         // pops seconds, Hz

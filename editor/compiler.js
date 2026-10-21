@@ -2,7 +2,7 @@
 
 const BC = {
   VERSION: 1, HEADER: 16, MAX_SIZE: 1024, MAX_VARS: 32,
-  FLAG_INVERT_MOTORS: 0x01, FLAG_INVERT_HEAD: 0x02, FLAG_START_WITH_OK: 0x04,
+  FLAG_INVERT_HEAD: 0x02, FLAG_START_WITH_OK: 0x04,
 };
 
 const OP = {
@@ -10,7 +10,7 @@ const OP = {
   ADD: 0x10, SUB: 0x11, MUL: 0x12, DIV: 0x13, MOD: 0x14, NEG: 0x15, ABS: 0x16, ROUND: 0x17, RANDOM: 0x18,
   LT: 0x20, LE: 0x21, GT: 0x22, GE: 0x23, EQ: 0x24, NE: 0x25, AND: 0x26, OR: 0x27, NOT: 0x28,
   JMP: 0x30, JZ: 0x31, JNZ: 0x32, WAIT: 0x33, HALT: 0x34,
-  MOVE: 0x40, TURN: 0x41, STRAFE: 0x42, DRIVE: 0x43, SPEED: 0x44, MOTORS: 0x45,
+  MOVE: 0x40, TURN: 0x41, STRAFE: 0x42, DRIVE: 0x43, SPEED: 0x44, MOTORS: 0x45, WHEEL: 0x46,
   BEEP: 0x50, TONE: 0x51, TUNE: 0x52,
   LEDS: 0x60, LED: 0x61, BRIGHT: 0x62,
   HEAD: 0x68,
@@ -313,9 +313,9 @@ function buildImage(code, nvars, settings, sourceMap = []) {
   if (size > BC.MAX_SIZE)
     throw new CompileError(`Le programme est trop long pour la voiture (${size} octets sur ${BC.MAX_SIZE}).`);
   let flags = 0;
-  if (settings.invertMotors) flags |= BC.FLAG_INVERT_MOTORS;
   if (settings.invertHead) flags |= BC.FLAG_INVERT_HEAD;
   if (settings.startWithOk) flags |= BC.FLAG_START_WITH_OK;
+  const wheelInvert = settings.invertWheels.reduce((m, inv, i) => inv ? m | 1 << i : m, 0);
   const sum = code.reduce((a, b) => (a + b) & 0xFF, 0);
   const ms90 = Math.round(settings.ms90);
   const cmps10 = Math.max(1, Math.round(settings.cmps * 10));
@@ -324,7 +324,7 @@ function buildImage(code, nvars, settings, sourceMap = []) {
     code.length & 0xFF, code.length >> 8,
     ms90 & 0xFF, ms90 >> 8,
     cmps10 & 0xFF, cmps10 >> 8,
-    settings.moveSpeed, settings.turnSpeed, nvars, sum, 0, 0,
+    settings.moveSpeed, settings.turnSpeed, nvars, sum, wheelInvert, 0,
   ];
   return {bytes: Uint8Array.from([...header, ...code]), sourceMap, size};
 }
@@ -335,6 +335,24 @@ function calibrationProgram(kind, settings) {
   if (kind === 'turn') {
     e.push(360);
     e.emit(OP.TURN);
+  } else if (kind === 'wheels') {
+    // Each motor alone, forwards, with its name and place (as in Adeept's assembly guide) on the screen.
+    const places = ['arr gauche', 'av gauche', 'av droite', 'arr droite'];
+    for (let i = 0; i < 4; i++) {
+      for (const [line, text] of [[0, `Roue M${i + 1}`], [1, places[i]]]) {
+        e.emit(OP.TEXT, line, text.length);
+        for (const c of text)
+          e.emit(c.charCodeAt(0));
+      }
+      e.push(60);
+      e.emit(OP.WHEEL, i);
+      e.push(1.5);
+      e.emit(OP.WAIT);
+      e.push(0);
+      e.emit(OP.WHEEL, i);
+      e.push(0.5);
+      e.emit(OP.WAIT);
+    }
   } else {
     e.push(50);
     e.emit(OP.MOVE);

@@ -427,6 +427,13 @@ class Simulator {
           lastDrive = 0;
           this.setWheels([a, a, b, b].map(v => Math.max(-100, Math.min(100, Math.trunc(v)))));
           break;
+        case OP.WHEEL: {
+          const w = this.wheels.slice();
+          w[fetch() & 3] = Math.max(-100, Math.min(100, Math.trunc(pop())));
+          lastDrive = 0;
+          this.setWheels(w);
+          break;
+        }
 
         case OP.BEEP: await this.note(1000, 150); break;
         case OP.TONE: b = pop(); a = pop(); if (b > 0) await this.note(a, b * 1000); break;

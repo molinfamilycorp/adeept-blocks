@@ -25,13 +25,14 @@ L'enfant assemble des blocs comme « avancer de 20 cm », « tourner à droite d
 3. Brancher la voiture en USB. Sur Mac récent, le pilote CH340 est déjà intégré ; sinon il est dans le dossier `Adeept driver` des ressources Adeept.
 4. ⚙️ **Réglages → Installer le programme de base**, choisir le port (`wchusbserial…` ou `usbserial…`). L'installation prend environ 15 secondes.
    *Autre méthode :* ouvrir `firmware/AdeeptBlocs/AdeeptBlocs.ino` dans l'IDE Arduino. Installer la bibliothèque **Adafruit NeoPixel**, choisir la carte « Arduino Uno » et téléverser.
-5. **Régler les déplacements** (même fenêtre). La voiture n'a pas de capteur de rotation des roues : elle calcule les distances et les angles en chronométrant les moteurs. Pose-la sur le sol où elle roulera, avec la batterie chargée :
+5. **Vérifier le sens des roues** (même fenêtre). Poser la voiture sur une boîte, roues dans le vide, et cliquer « Tester chaque roue ». Les moteurs M1 à M4 (connecteurs D1 à D4 de la carte) tournent l'un après l'autre et l'écran affiche leur nom et leur place. D'après la notice de montage, M1 est à l'arrière gauche, M2 à l'avant gauche, M3 à l'avant droit et M4 à l'arrière droit. Chaque roue doit tourner vers l'avant : cocher celles qui tournent à l'envers. Par défaut, les roues de droite (M3, M4) sont cochées, car c'est ce qu'a montré notre voiture. Le code publié par Adeept commande pourtant les 4 moteurs de la même façon.
+6. **Régler les déplacements** (même fenêtre). La voiture n'a pas de capteur de rotation des roues : elle calcule les distances et les angles en chronométrant les moteurs. Pose-la sur le sol où elle roulera, avec la batterie chargée :
    - « Essayer : avancer de 50 cm » : ajuster la vitesse en cm/s jusqu'à ce qu'elle fasse bien 50 cm ;
    - « Essayer : faire un tour complet » : ajuster le temps du quart de tour jusqu'à un tour bien complet.
 
    Ces essais ne remplacent pas le programme de l'enfant. Les réglages sont envoyés avec chaque programme. Ils changent avec le sol (carrelage ou tapis) et avec la charge de la batterie : il est normal de les refaire de temps en temps.
-6. Cocher les cases de « Ma voiture » si besoin : roues Mecanum (ajoute les blocs « glisser »), moteurs ou tête inversés, démarrage par la touche OK.
-7. Section « Capteurs en direct » : vérifier que la distance, les capteurs de ligne et la télécommande réagissent.
+7. Cocher les cases de « Ma voiture » si besoin : roues Mecanum (ajoute les blocs « glisser »), tête inversée, démarrage par la touche OK.
+8. Section « Capteurs en direct » : vérifier que la distance, les capteurs de ligne et la télécommande réagissent.
 
 ## Utilisation par l'enfant
 

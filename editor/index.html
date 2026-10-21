@@ -121,6 +121,11 @@
   dialog button { background: var(--blue); color: #fff; }
   dialog button.secondary { background: #eef2f8; color: var(--blue-dark); }
   progress { width: 100%; height: 14px; }
+  .wheels {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px 24px; width: max-content;
+    padding: 8px 14px; border: 2px dashed var(--line); border-radius: 12px; margin: 6px 0;
+  }
+  .wheels .front { grid-column: 1 / 3; text-align: center; font-size: 13px; }
   .example {
     display: flex; gap: 12px; align-items: flex-start; width: 100%; text-align: left;
     background: #f5f7fb; color: var(--text); font-weight: normal; margin-bottom: 8px; padding: 10px 12px;
@@ -216,12 +221,24 @@
     <section>
       <h3>2. Ma voiture</h3>
       <label><input type="checkbox" id="setMecanum"> Elle a des roues Mecanum (elle peut glisser de côté)</label>
-      <label><input type="checkbox" id="setInvertMotors"> Elle recule quand elle devrait avancer (moteurs inversés)</label>
       <label><input type="checkbox" id="setInvertHead"> Sa tête tourne du mauvais côté</label>
       <label><input type="checkbox" id="setStartWithOk"> Attendre la touche OK de la télécommande pour démarrer (sinon : départ après 3 bips)</label>
     </section>
     <section>
-      <h3>3. Régler les déplacements</h3>
+      <h3>3. Le sens des roues</h3>
+      <p class="help">Pose la voiture sur une boîte, roues dans le vide, puis clique « Tester chaque roue » : les roues tournent l'une après l'autre et l'écran de la voiture dit laquelle (D1 à D4 sur la carte = M1 à M4). <b>Chaque roue doit tourner vers l'avant.</b> Si une roue tourne vers l'arrière, coche-la ci-dessous.</p>
+      <div class="wheels">
+        <span class="front">⬆️ avant de la voiture</span>
+        <label><input type="checkbox" id="setWheel1"> M2 avant gauche</label>
+        <label><input type="checkbox" id="setWheel2"> M3 avant droite</label>
+        <label><input type="checkbox" id="setWheel0"> M1 arrière gauche</label>
+        <label><input type="checkbox" id="setWheel3"> M4 arrière droite</label>
+      </div>
+      <div class="row"><button id="btnTestWheels" class="secondary">Tester chaque roue</button></div>
+      <p class="help">Coché = la roue est branchée à l'envers. Par défaut, les deux roues de droite sont cochées, comme sur notre voiture.</p>
+    </section>
+    <section>
+      <h3>4. Régler les déplacements</h3>
       <p class="help">La voiture n'a pas de compteur de tours de roue : elle calcule les distances et les angles avec le temps. Il faut donc la régler une fois, sur le sol où elle va rouler, avec la batterie bien chargée.</p>
       <label>Vitesse en ligne droite : <input type="number" id="setCmps" min="1" max="200" step="0.5"> cm par seconde</label>
       <div class="row"><button id="btnTestMove" class="secondary">Essayer : avancer de 50 cm</button></div>
@@ -233,7 +250,7 @@
       <label>Puissance pour tourner : <input type="number" id="setTurnSpeed" min="20" max="100"> %</label>
     </section>
     <section>
-      <h3>4. Capteurs en direct</h3>
+      <h3>5. Capteurs en direct</h3>
       <p class="help">Utile pour vérifier que tout marche (voiture connectée).</p>
       <div id="sensorView">—</div>
     </section>

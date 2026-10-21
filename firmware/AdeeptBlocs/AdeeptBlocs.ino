@@ -17,7 +17,7 @@
 #include "faces.h"
 #include "bytecode.h"
 
-#define FW_VERSION 1
+#define FW_VERSION 2
 
 #define PIN_IR      2
 #define PIN_BUZZER  3
@@ -96,6 +96,7 @@ struct Config {
   uint8_t moveSpeed;
   uint8_t turnSpeed;
   uint8_t nvars;
+  uint8_t wheelInvert;  // bit i set: motor M(i+1) is wired backwards
 };
 
 static Config cfg;
@@ -123,6 +124,7 @@ static bool loadConfig()
   cfg.moveSpeed = progByte(10);
   cfg.turnSpeed = progByte(11);
   cfg.nvars = progByte(12);
+  cfg.wheelInvert = progByte(14);
   uint16_t room = fromRam ? RAM_PROG : EEPROM.length();
   if (cfg.len > room - BC_HEADER || cfg.nvars > MAX_VARS)
     return false;
@@ -132,15 +134,17 @@ static bool loadConfig()
   return sum == progByte(13);
 }
 
+static void wheel(uint8_t i, int speed)
+{
+  motor(i, cfg.wheelInvert & (1 << i) ? -speed : speed);
+}
+
 static void wheels(int m1, int m2, int m3, int m4)
 {
-  if (cfg.flags & FLAG_INVERT_MOTORS) {
-    m1 = -m1; m2 = -m2; m3 = -m3; m4 = -m4;
-  }
-  motor(0, m1);
-  motor(1, m2);
-  motor(2, m3);
-  motor(3, m4);
+  wheel(0, m1);
+  wheel(1, m2);
+  wheel(2, m3);
+  wheel(3, m4);
 }
 
 static void sides(int left, int right)
@@ -719,6 +723,12 @@ static void runProgram()
       lastDrive = DRIVE_STOP;
       sides(a, b);
       break;
+    case OP_WHEEL: {
+      uint8_t i = fetch() & 3;
+      lastDrive = DRIVE_STOP;
+      wheel(i, constrain((int)pop(), -100, 100));
+      break;
+    }
 
     case OP_BEEP:
       playNote(1000, 150);
