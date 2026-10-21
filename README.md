@@ -15,7 +15,7 @@ L'enfant assemble des blocs comme « avancer de 20 cm », « tourner à droite d
 
 ## Mise en route (une seule fois, par un adulte)
 
-1. Ouvrir `editor/index.html` dans **Chrome** ou **Edge** (double-clic sur le fichier). Firefox et Safari ne savent pas parler au port USB.
+1. Ouvrir l'éditeur en ligne, https://molinfamilycorp.github.io/adeept-blocks/, ou `editor/index.html` en local, dans **Chrome** ou **Edge** (double-clic sur le fichier). Firefox et Safari ne savent pas parler au port USB.
    Si le bouton « Connecter » ne fait rien, lancer un petit serveur :
    ```bash
    python3 -m http.server 8000 --directory editor
