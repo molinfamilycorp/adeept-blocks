@@ -1,0 +1,252 @@
+{
+ "adeeptBlocs": 1,
+ "title": "Garde du corps",
+ "description": "La voiture te suit ! Mets ta main devant elle : si elle est trop près, la voiture recule ; si elle s'éloigne, la voiture avance. S'il n'y a personne, elle s'endort.",
+ "learn": "garder une distance, « et »",
+ "sim": {
+  "x": 40,
+  "y": 80,
+  "heading": 0
+ },
+ "workspace": {
+  "blocks": {
+   "languageVersion": 0,
+   "blocks": [
+    {
+     "type": "car_start",
+     "x": 0,
+     "y": 170,
+     "next": {
+      "block": {
+       "type": "car_speed",
+       "fields": {
+        "SPEED": "60"
+       },
+       "next": {
+        "block": {
+         "type": "car_forever",
+         "inputs": {
+          "DO": {
+           "block": {
+            "type": "variables_set",
+            "fields": {
+             "VAR": {
+              "id": "var_d"
+             }
+            },
+            "inputs": {
+             "VALUE": {
+              "block": {
+               "type": "car_distance"
+              }
+             }
+            },
+            "next": {
+             "block": {
+              "type": "car_ifelse",
+              "inputs": {
+               "COND": {
+                "block": {
+                 "type": "op_lt",
+                 "inputs": {
+                  "A": {
+                   "block": {
+                    "type": "variables_get",
+                    "fields": {
+                     "VAR": {
+                      "id": "var_d"
+                     }
+                    }
+                   }
+                  },
+                  "B": {
+                   "shadow": {
+                    "type": "math_number",
+                    "fields": {
+                     "NUM": 15
+                    }
+                   }
+                  }
+                 }
+                }
+               },
+               "DO": {
+                "block": {
+                 "type": "car_drive",
+                 "fields": {
+                  "MODE": "2"
+                 },
+                 "next": {
+                  "block": {
+                   "type": "car_face",
+                   "fields": {
+                    "FACE": "5"
+                   }
+                  }
+                 }
+                }
+               },
+               "ELSE": {
+                "block": {
+                 "type": "car_ifelse",
+                 "inputs": {
+                  "COND": {
+                   "block": {
+                    "type": "op_and",
+                    "inputs": {
+                     "A": {
+                      "block": {
+                       "type": "op_gt",
+                       "inputs": {
+                        "A": {
+                         "block": {
+                          "type": "variables_get",
+                          "fields": {
+                           "VAR": {
+                            "id": "var_d"
+                           }
+                          }
+                         }
+                        },
+                        "B": {
+                         "shadow": {
+                          "type": "math_number",
+                          "fields": {
+                           "NUM": 25
+                          }
+                         }
+                        }
+                       }
+                      }
+                     },
+                     "B": {
+                      "block": {
+                       "type": "op_lt",
+                       "inputs": {
+                        "A": {
+                         "block": {
+                          "type": "variables_get",
+                          "fields": {
+                           "VAR": {
+                            "id": "var_d"
+                           }
+                          }
+                         }
+                        },
+                        "B": {
+                         "shadow": {
+                          "type": "math_number",
+                          "fields": {
+                           "NUM": 80
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  },
+                  "DO": {
+                   "block": {
+                    "type": "car_drive",
+                    "fields": {
+                     "MODE": "1"
+                    },
+                    "next": {
+                     "block": {
+                      "type": "car_face",
+                      "fields": {
+                       "FACE": "1"
+                      }
+                     }
+                    }
+                   }
+                  },
+                  "ELSE": {
+                   "block": {
+                    "type": "car_stop",
+                    "next": {
+                     "block": {
+                      "type": "car_ifelse",
+                      "inputs": {
+                       "COND": {
+                        "block": {
+                         "type": "op_gt",
+                         "inputs": {
+                          "A": {
+                           "block": {
+                            "type": "variables_get",
+                            "fields": {
+                             "VAR": {
+                              "id": "var_d"
+                             }
+                            }
+                           }
+                          },
+                          "B": {
+                           "shadow": {
+                            "type": "math_number",
+                            "fields": {
+                             "NUM": 80
+                            }
+                           }
+                          }
+                         }
+                        }
+                       },
+                       "DO": {
+                        "block": {
+                         "type": "car_face",
+                         "fields": {
+                          "FACE": "7"
+                         }
+                        }
+                       },
+                       "ELSE": {
+                        "block": {
+                         "type": "car_face",
+                         "fields": {
+                          "FACE": "0"
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "variables": [
+   {
+    "name": "d",
+    "id": "var_d"
+   }
+  ],
+  "workspaceComments": [
+   {
+    "id": "explication",
+    "x": 0,
+    "y": 0,
+    "width": 440,
+    "height": 150,
+    "text": "Garde du corps\n\nLa voiture te suit ! Mets ta main devant elle : si elle est trop près, la voiture recule ; si elle s'éloigne, la voiture avance. S'il n'y a personne, elle s'endort.\n\nOn apprend : garder une distance, « et »."
+   }
+  ]
+ }
+}

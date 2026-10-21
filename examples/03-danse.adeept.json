@@ -1,0 +1,299 @@
+{
+ "adeeptBlocs": 1,
+ "title": "La danse",
+ "description": "Une petite chorégraphie : la voiture se tortille, change de couleur et fait de la musique. Invente tes propres pas de danse !",
+ "learn": "enchaîner des mouvements, des sons et des couleurs",
+ "sim": {
+  "x": 40,
+  "y": 80,
+  "heading": 0
+ },
+ "workspace": {
+  "blocks": {
+   "languageVersion": 0,
+   "blocks": [
+    {
+     "type": "car_start",
+     "x": 0,
+     "y": 170,
+     "next": {
+      "block": {
+       "type": "car_text",
+       "fields": {
+        "TEXT": "Disco !",
+        "LINE": "1"
+       },
+       "next": {
+        "block": {
+         "type": "car_repeat",
+         "inputs": {
+          "TIMES": {
+           "shadow": {
+            "type": "math_number",
+            "fields": {
+             "NUM": 2
+            }
+           }
+          },
+          "DO": {
+           "block": {
+            "type": "car_leds",
+            "fields": {
+             "COLOUR": "255,0,120"
+            },
+            "next": {
+             "block": {
+              "type": "car_face",
+              "fields": {
+               "FACE": "2"
+              },
+              "next": {
+               "block": {
+                "type": "car_turn",
+                "fields": {
+                 "DIR": "L"
+                },
+                "inputs": {
+                 "DEG": {
+                  "shadow": {
+                   "type": "math_number",
+                   "fields": {
+                    "NUM": 45
+                   }
+                  }
+                 }
+                },
+                "next": {
+                 "block": {
+                  "type": "car_note",
+                  "fields": {
+                   "NOTE": "262"
+                  },
+                  "inputs": {
+                   "SEC": {
+                    "shadow": {
+                     "type": "math_number",
+                     "fields": {
+                      "NUM": 0.2
+                     }
+                    }
+                   }
+                  },
+                  "next": {
+                   "block": {
+                    "type": "car_leds",
+                    "fields": {
+                     "COLOUR": "0,220,255"
+                    },
+                    "next": {
+                     "block": {
+                      "type": "car_face",
+                      "fields": {
+                       "FACE": "3"
+                      },
+                      "next": {
+                       "block": {
+                        "type": "car_turn",
+                        "fields": {
+                         "DIR": "R"
+                        },
+                        "inputs": {
+                         "DEG": {
+                          "shadow": {
+                           "type": "math_number",
+                           "fields": {
+                            "NUM": 90
+                           }
+                          }
+                         }
+                        },
+                        "next": {
+                         "block": {
+                          "type": "car_note",
+                          "fields": {
+                           "NOTE": "330"
+                          },
+                          "inputs": {
+                           "SEC": {
+                            "shadow": {
+                             "type": "math_number",
+                             "fields": {
+                              "NUM": 0.2
+                             }
+                            }
+                           }
+                          },
+                          "next": {
+                           "block": {
+                            "type": "car_leds",
+                            "fields": {
+                             "COLOUR": "255,200,0"
+                            },
+                            "next": {
+                             "block": {
+                              "type": "car_face",
+                              "fields": {
+                               "FACE": "2"
+                              },
+                              "next": {
+                               "block": {
+                                "type": "car_turn",
+                                "fields": {
+                                 "DIR": "L"
+                                },
+                                "inputs": {
+                                 "DEG": {
+                                  "shadow": {
+                                   "type": "math_number",
+                                   "fields": {
+                                    "NUM": 45
+                                   }
+                                  }
+                                 }
+                                },
+                                "next": {
+                                 "block": {
+                                  "type": "car_note",
+                                  "fields": {
+                                   "NOTE": "392"
+                                  },
+                                  "inputs": {
+                                   "SEC": {
+                                    "shadow": {
+                                     "type": "math_number",
+                                     "fields": {
+                                      "NUM": 0.2
+                                     }
+                                    }
+                                   }
+                                  }
+                                 }
+                                }
+                               }
+                              }
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         },
+         "next": {
+          "block": {
+           "type": "car_leds",
+           "fields": {
+            "COLOUR": "150,0,255"
+           },
+           "next": {
+            "block": {
+             "type": "car_move",
+             "inputs": {
+              "CM": {
+               "shadow": {
+                "type": "math_number",
+                "fields": {
+                 "NUM": 15
+                }
+               }
+              }
+             },
+             "next": {
+              "block": {
+               "type": "car_back",
+               "inputs": {
+                "CM": {
+                 "shadow": {
+                  "type": "math_number",
+                  "fields": {
+                   "NUM": 15
+                  }
+                 }
+                }
+               },
+               "next": {
+                "block": {
+                 "type": "car_face",
+                 "fields": {
+                  "FACE": "8"
+                 },
+                 "next": {
+                  "block": {
+                   "type": "car_uturn",
+                   "next": {
+                    "block": {
+                     "type": "car_leds",
+                     "fields": {
+                      "COLOUR": "255,0,0"
+                     },
+                     "next": {
+                      "block": {
+                       "type": "car_tune",
+                       "fields": {
+                        "TUNE": "4"
+                       },
+                       "next": {
+                        "block": {
+                         "type": "car_uturn",
+                         "next": {
+                          "block": {
+                           "type": "car_face",
+                           "fields": {
+                            "FACE": "0"
+                           },
+                           "next": {
+                            "block": {
+                             "type": "car_leds_off"
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "variables": [],
+  "workspaceComments": [
+   {
+    "id": "explication",
+    "x": 0,
+    "y": 0,
+    "width": 440,
+    "height": 150,
+    "text": "La danse\n\nUne petite chorégraphie : la voiture se tortille, change de couleur et fait de la musique. Invente tes propres pas de danse !\n\nOn apprend : enchaîner des mouvements, des sons et des couleurs."
+   }
+  ]
+ }
+}

@@ -1,0 +1,147 @@
+{
+ "adeeptBlocs": 1,
+ "title": "Bonjour !",
+ "description": "La voiture se réveille : elle ouvre les yeux, écrit sur son écran, allume ses lumières et chante. Elle ne bouge pas encore.",
+ "learn": "yeux, écran, lumières, musique, attendre",
+ "sim": {
+  "x": 40,
+  "y": 80,
+  "heading": 0
+ },
+ "workspace": {
+  "blocks": {
+   "languageVersion": 0,
+   "blocks": [
+    {
+     "type": "car_start",
+     "x": 0,
+     "y": 170,
+     "next": {
+      "block": {
+       "type": "car_face",
+       "fields": {
+        "FACE": "7"
+       },
+       "next": {
+        "block": {
+         "type": "car_wait",
+         "inputs": {
+          "SEC": {
+           "shadow": {
+            "type": "math_number",
+            "fields": {
+             "NUM": 1
+            }
+           }
+          }
+         },
+         "next": {
+          "block": {
+           "type": "car_face",
+           "fields": {
+            "FACE": "1"
+           },
+           "next": {
+            "block": {
+             "type": "car_text",
+             "fields": {
+              "TEXT": "Bonjour !",
+              "LINE": "0"
+             },
+             "next": {
+              "block": {
+               "type": "car_text",
+               "fields": {
+                "TEXT": "Je suis",
+                "LINE": "2"
+               },
+               "next": {
+                "block": {
+                 "type": "car_text",
+                 "fields": {
+                  "TEXT": "ta voiture",
+                  "LINE": "3"
+                 },
+                 "next": {
+                  "block": {
+                   "type": "car_leds",
+                   "fields": {
+                    "COLOUR": "0,0,255"
+                   },
+                   "next": {
+                    "block": {
+                     "type": "car_wait",
+                     "inputs": {
+                      "SEC": {
+                       "shadow": {
+                        "type": "math_number",
+                        "fields": {
+                         "NUM": 1
+                        }
+                       }
+                      }
+                     },
+                     "next": {
+                      "block": {
+                       "type": "car_face",
+                       "fields": {
+                        "FACE": "9"
+                       },
+                       "next": {
+                        "block": {
+                         "type": "car_tune",
+                         "fields": {
+                          "TUNE": "4"
+                         },
+                         "next": {
+                          "block": {
+                           "type": "car_face",
+                           "fields": {
+                            "FACE": "0"
+                           },
+                           "next": {
+                            "block": {
+                             "type": "car_leds",
+                             "fields": {
+                              "COLOUR": "0,255,0"
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "variables": [],
+  "workspaceComments": [
+   {
+    "id": "explication",
+    "x": 0,
+    "y": 0,
+    "width": 440,
+    "height": 150,
+    "text": "Bonjour !\n\nLa voiture se réveille : elle ouvre les yeux, écrit sur son écran, allume ses lumières et chante. Elle ne bouge pas encore.\n\nOn apprend : yeux, écran, lumières, musique, attendre."
+   }
+  ]
+ }
+}

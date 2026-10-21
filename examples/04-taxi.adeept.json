@@ -1,0 +1,278 @@
+{
+ "adeeptBlocs": 1,
+ "title": "Taxi autonome",
+ "description": "Le taxi tourne en rond dans la ville. À chaque arrêt, il joue une musique, fait clignoter ses lumières orange pendant 10 secondes et compte les arrêts sur son écran.",
+ "learn": "répéter indéfiniment, variable qui compte",
+ "sim": {
+  "x": 20,
+  "y": 145,
+  "heading": 270
+ },
+ "workspace": {
+  "blocks": {
+   "languageVersion": 0,
+   "blocks": [
+    {
+     "type": "car_start",
+     "x": 0,
+     "y": 170,
+     "next": {
+      "block": {
+       "type": "variables_set",
+       "fields": {
+        "VAR": {
+         "id": "var_arrets"
+        }
+       },
+       "inputs": {
+        "VALUE": {
+         "shadow": {
+          "type": "math_number",
+          "fields": {
+           "NUM": 0
+          }
+         }
+        }
+       },
+       "next": {
+        "block": {
+         "type": "car_text",
+         "fields": {
+          "TEXT": "TAXI",
+          "LINE": "0"
+         },
+         "next": {
+          "block": {
+           "type": "car_forever",
+           "inputs": {
+            "DO": {
+             "block": {
+              "type": "car_text",
+              "fields": {
+               "TEXT": "En route",
+               "LINE": "2"
+              },
+              "next": {
+               "block": {
+                "type": "car_face",
+                "fields": {
+                 "FACE": "1"
+                },
+                "next": {
+                 "block": {
+                  "type": "car_move",
+                  "inputs": {
+                   "CM": {
+                    "shadow": {
+                     "type": "math_number",
+                     "fields": {
+                      "NUM": 80
+                     }
+                    }
+                   }
+                  },
+                  "next": {
+                   "block": {
+                    "type": "car_turn",
+                    "fields": {
+                     "DIR": "R"
+                    },
+                    "inputs": {
+                     "DEG": {
+                      "shadow": {
+                       "type": "math_number",
+                       "fields": {
+                        "NUM": 90
+                       }
+                      }
+                     }
+                    },
+                    "next": {
+                     "block": {
+                      "type": "car_move",
+                      "inputs": {
+                       "CM": {
+                        "shadow": {
+                         "type": "math_number",
+                         "fields": {
+                          "NUM": 50
+                         }
+                        }
+                       }
+                      },
+                      "next": {
+                       "block": {
+                        "type": "car_stop",
+                        "next": {
+                         "block": {
+                          "type": "math_change",
+                          "fields": {
+                           "VAR": {
+                            "id": "var_arrets"
+                           }
+                          },
+                          "inputs": {
+                           "DELTA": {
+                            "shadow": {
+                             "type": "math_number",
+                             "fields": {
+                              "NUM": 1
+                             }
+                            }
+                           }
+                          },
+                          "next": {
+                           "block": {
+                            "type": "car_textnum",
+                            "fields": {
+                             "TEXT": "Arret",
+                             "LINE": "2"
+                            },
+                            "inputs": {
+                             "VALUE": {
+                              "block": {
+                               "type": "variables_get",
+                               "fields": {
+                                "VAR": {
+                                 "id": "var_arrets"
+                                }
+                               }
+                              }
+                             }
+                            },
+                            "next": {
+                             "block": {
+                              "type": "car_face",
+                              "fields": {
+                               "FACE": "0"
+                              },
+                              "next": {
+                               "block": {
+                                "type": "car_tune",
+                                "fields": {
+                                 "TUNE": "0"
+                                },
+                                "next": {
+                                 "block": {
+                                  "type": "car_repeat",
+                                  "inputs": {
+                                   "TIMES": {
+                                    "shadow": {
+                                     "type": "math_number",
+                                     "fields": {
+                                      "NUM": 5
+                                     }
+                                    }
+                                   },
+                                   "DO": {
+                                    "block": {
+                                     "type": "car_leds",
+                                     "fields": {
+                                      "COLOUR": "255,90,0"
+                                     },
+                                     "next": {
+                                      "block": {
+                                       "type": "car_wait",
+                                       "inputs": {
+                                        "SEC": {
+                                         "shadow": {
+                                          "type": "math_number",
+                                          "fields": {
+                                           "NUM": 1
+                                          }
+                                         }
+                                        }
+                                       },
+                                       "next": {
+                                        "block": {
+                                         "type": "car_leds_off",
+                                         "next": {
+                                          "block": {
+                                           "type": "car_wait",
+                                           "inputs": {
+                                            "SEC": {
+                                             "shadow": {
+                                              "type": "math_number",
+                                              "fields": {
+                                               "NUM": 1
+                                              }
+                                             }
+                                            }
+                                           }
+                                          }
+                                         }
+                                        }
+                                       }
+                                      }
+                                     }
+                                    }
+                                   }
+                                  },
+                                  "next": {
+                                   "block": {
+                                    "type": "car_turn",
+                                    "fields": {
+                                     "DIR": "R"
+                                    },
+                                    "inputs": {
+                                     "DEG": {
+                                      "shadow": {
+                                       "type": "math_number",
+                                       "fields": {
+                                        "NUM": 90
+                                       }
+                                      }
+                                     }
+                                    }
+                                   }
+                                  }
+                                 }
+                                }
+                               }
+                              }
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "variables": [
+   {
+    "name": "arrets",
+    "id": "var_arrets"
+   }
+  ],
+  "workspaceComments": [
+   {
+    "id": "explication",
+    "x": 0,
+    "y": 0,
+    "width": 440,
+    "height": 150,
+    "text": "Taxi autonome\n\nLe taxi tourne en rond dans la ville. À chaque arrêt, il joue une musique, fait clignoter ses lumières orange pendant 10 secondes et compte les arrêts sur son écran.\n\nOn apprend : répéter indéfiniment, variable qui compte."
+   }
+  ]
+ }
+}

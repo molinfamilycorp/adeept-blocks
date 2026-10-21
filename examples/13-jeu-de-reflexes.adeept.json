@@ -1,0 +1,362 @@
+{
+ "adeeptBlocs": 1,
+ "title": "Jeu de réflexes",
+ "description": "Attention… Quand les lumières deviennent vertes, appuie vite sur OK ! La voiture chronomètre ton temps de réaction. Moins de 0,5 seconde : bravo ! Mais si tu appuies trop tôt, c'est perdu. Appuie encore sur OK pour rejouer.",
+ "learn": "chronomètre, attendre un temps au hasard, répéter jusqu'à",
+ "sim": {
+  "x": 40,
+  "y": 80,
+  "heading": 0
+ },
+ "workspace": {
+  "blocks": {
+   "languageVersion": 0,
+   "blocks": [
+    {
+     "type": "car_start",
+     "x": 0,
+     "y": 170,
+     "next": {
+      "block": {
+       "type": "car_cls",
+       "next": {
+        "block": {
+         "type": "car_text",
+         "fields": {
+          "TEXT": "Pret ?",
+          "LINE": "0"
+         },
+         "next": {
+          "block": {
+           "type": "car_leds",
+           "fields": {
+            "COLOUR": "255,0,0"
+           },
+           "next": {
+            "block": {
+             "type": "car_face",
+             "fields": {
+              "FACE": "1"
+             },
+             "next": {
+              "block": {
+               "type": "variables_set",
+               "fields": {
+                "VAR": {
+                 "id": "var_attente"
+                }
+               },
+               "inputs": {
+                "VALUE": {
+                 "block": {
+                  "type": "op_random",
+                  "inputs": {
+                   "A": {
+                    "shadow": {
+                     "type": "math_number",
+                     "fields": {
+                      "NUM": 2
+                     }
+                    }
+                   },
+                   "B": {
+                    "shadow": {
+                     "type": "math_number",
+                     "fields": {
+                      "NUM": 5
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               },
+               "next": {
+                "block": {
+                 "type": "car_timer_reset",
+                 "next": {
+                  "block": {
+                   "type": "car_repeat_until",
+                   "inputs": {
+                    "COND": {
+                     "block": {
+                      "type": "op_gt",
+                      "inputs": {
+                       "A": {
+                        "block": {
+                         "type": "car_timer"
+                        }
+                       },
+                       "B": {
+                        "block": {
+                         "type": "variables_get",
+                         "fields": {
+                          "VAR": {
+                           "id": "var_attente"
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    },
+                    "DO": {
+                     "block": {
+                      "type": "car_if",
+                      "inputs": {
+                       "COND": {
+                        "block": {
+                         "type": "car_key",
+                         "fields": {
+                          "KEY": "16"
+                         }
+                        }
+                       },
+                       "DO": {
+                        "block": {
+                         "type": "car_leds_off",
+                         "next": {
+                          "block": {
+                           "type": "car_text",
+                           "fields": {
+                            "TEXT": "Trop tot !",
+                            "LINE": "1"
+                           },
+                           "next": {
+                            "block": {
+                             "type": "car_face",
+                             "fields": {
+                              "FACE": "6"
+                             },
+                             "next": {
+                              "block": {
+                               "type": "car_tune",
+                               "fields": {
+                                "TUNE": "1"
+                               },
+                               "next": {
+                                "block": {
+                                 "type": "car_halt"
+                                }
+                               }
+                              }
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   },
+                   "next": {
+                    "block": {
+                     "type": "car_leds",
+                     "fields": {
+                      "COLOUR": "0,255,0"
+                     },
+                     "next": {
+                      "block": {
+                       "type": "car_face",
+                       "fields": {
+                        "FACE": "13"
+                       },
+                       "next": {
+                        "block": {
+                         "type": "car_text",
+                         "fields": {
+                          "TEXT": "VITE !",
+                          "LINE": "0"
+                         },
+                         "next": {
+                          "block": {
+                           "type": "car_timer_reset",
+                           "next": {
+                            "block": {
+                             "type": "car_wait_until",
+                             "inputs": {
+                              "COND": {
+                               "block": {
+                                "type": "car_key",
+                                "fields": {
+                                 "KEY": "16"
+                                }
+                               }
+                              }
+                             },
+                             "next": {
+                              "block": {
+                               "type": "variables_set",
+                               "fields": {
+                                "VAR": {
+                                 "id": "var_temps"
+                                }
+                               },
+                               "inputs": {
+                                "VALUE": {
+                                 "block": {
+                                  "type": "car_timer"
+                                 }
+                                }
+                               },
+                               "next": {
+                                "block": {
+                                 "type": "car_leds_off",
+                                 "next": {
+                                  "block": {
+                                   "type": "car_textnum",
+                                   "fields": {
+                                    "TEXT": "Temps",
+                                    "LINE": "1"
+                                   },
+                                   "inputs": {
+                                    "VALUE": {
+                                     "block": {
+                                      "type": "variables_get",
+                                      "fields": {
+                                       "VAR": {
+                                        "id": "var_temps"
+                                       }
+                                      }
+                                     }
+                                    }
+                                   },
+                                   "next": {
+                                    "block": {
+                                     "type": "car_ifelse",
+                                     "inputs": {
+                                      "COND": {
+                                       "block": {
+                                        "type": "op_lt",
+                                        "inputs": {
+                                         "A": {
+                                          "block": {
+                                           "type": "variables_get",
+                                           "fields": {
+                                            "VAR": {
+                                             "id": "var_temps"
+                                            }
+                                           }
+                                          }
+                                         },
+                                         "B": {
+                                          "shadow": {
+                                           "type": "math_number",
+                                           "fields": {
+                                            "NUM": 0.5
+                                           }
+                                          }
+                                         }
+                                        }
+                                       }
+                                      },
+                                      "DO": {
+                                       "block": {
+                                        "type": "car_text",
+                                        "fields": {
+                                         "TEXT": "Bravo !",
+                                         "LINE": "3"
+                                        },
+                                        "next": {
+                                         "block": {
+                                          "type": "car_face",
+                                          "fields": {
+                                           "FACE": "8"
+                                          },
+                                          "next": {
+                                           "block": {
+                                            "type": "car_tune",
+                                            "fields": {
+                                             "TUNE": "0"
+                                            }
+                                           }
+                                          }
+                                         }
+                                        }
+                                       }
+                                      },
+                                      "ELSE": {
+                                       "block": {
+                                        "type": "car_text",
+                                        "fields": {
+                                         "TEXT": "Encore !",
+                                         "LINE": "3"
+                                        },
+                                        "next": {
+                                         "block": {
+                                          "type": "car_face",
+                                          "fields": {
+                                           "FACE": "4"
+                                          },
+                                          "next": {
+                                           "block": {
+                                            "type": "car_tune",
+                                            "fields": {
+                                             "TUNE": "1"
+                                            }
+                                           }
+                                          }
+                                         }
+                                        }
+                                       }
+                                      }
+                                     }
+                                    }
+                                   }
+                                  }
+                                 }
+                                }
+                               }
+                              }
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "variables": [
+   {
+    "name": "attente",
+    "id": "var_attente"
+   },
+   {
+    "name": "temps",
+    "id": "var_temps"
+   }
+  ],
+  "workspaceComments": [
+   {
+    "id": "explication",
+    "x": 0,
+    "y": 0,
+    "width": 440,
+    "height": 150,
+    "text": "Jeu de réflexes\n\nAttention… Quand les lumières deviennent vertes, appuie vite sur OK ! La voiture chronomètre ton temps de réaction. Moins de 0,5 seconde : bravo ! Mais si tu appuies trop tôt, c'est perdu. Appuie encore sur OK pour rejouer.\n\nOn apprend : chronomètre, attendre un temps au hasard, répéter jusqu'à."
+   }
+  ]
+ }
+}

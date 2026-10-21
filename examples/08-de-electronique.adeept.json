@@ -1,0 +1,376 @@
+{
+ "adeeptBlocs": 1,
+ "title": "Dé électronique",
+ "description": "Appuie sur OK : la voiture lance un dé. Elle allume autant de lumières que le résultat et l'écrit sur l'écran.",
+ "learn": "nombre aléatoire, variables, répéter un nombre de fois qui change",
+ "sim": {
+  "x": 40,
+  "y": 80,
+  "heading": 0
+ },
+ "workspace": {
+  "blocks": {
+   "languageVersion": 0,
+   "blocks": [
+    {
+     "type": "car_start",
+     "x": 0,
+     "y": 170,
+     "next": {
+      "block": {
+       "type": "car_text",
+       "fields": {
+        "TEXT": "Appuie",
+        "LINE": "0"
+       },
+       "next": {
+        "block": {
+         "type": "car_text",
+         "fields": {
+          "TEXT": "sur OK",
+          "LINE": "1"
+         },
+         "next": {
+          "block": {
+           "type": "car_forever",
+           "inputs": {
+            "DO": {
+             "block": {
+              "type": "car_wait_until",
+              "inputs": {
+               "COND": {
+                "block": {
+                 "type": "car_key",
+                 "fields": {
+                  "KEY": "16"
+                 }
+                }
+               }
+              },
+              "next": {
+               "block": {
+                "type": "car_cls",
+                "next": {
+                 "block": {
+                  "type": "car_face",
+                  "fields": {
+                   "FACE": "10"
+                  },
+                  "next": {
+                   "block": {
+                    "type": "car_repeat",
+                    "inputs": {
+                     "TIMES": {
+                      "shadow": {
+                       "type": "math_number",
+                       "fields": {
+                        "NUM": 6
+                       }
+                      }
+                     },
+                     "DO": {
+                      "block": {
+                       "type": "car_led",
+                       "fields": {
+                        "COLOUR": "255,255,255"
+                       },
+                       "inputs": {
+                        "N": {
+                         "block": {
+                          "type": "op_random",
+                          "inputs": {
+                           "A": {
+                            "shadow": {
+                             "type": "math_number",
+                             "fields": {
+                              "NUM": 1
+                             }
+                            }
+                           },
+                           "B": {
+                            "shadow": {
+                             "type": "math_number",
+                             "fields": {
+                              "NUM": 7
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       },
+                       "next": {
+                        "block": {
+                         "type": "car_note",
+                         "fields": {
+                          "NOTE": "440"
+                         },
+                         "inputs": {
+                          "SEC": {
+                           "shadow": {
+                            "type": "math_number",
+                            "fields": {
+                             "NUM": 0.05
+                            }
+                           }
+                          }
+                         },
+                         "next": {
+                          "block": {
+                           "type": "car_leds_off"
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    },
+                    "next": {
+                     "block": {
+                      "type": "variables_set",
+                      "fields": {
+                       "VAR": {
+                        "id": "var_de"
+                       }
+                      },
+                      "inputs": {
+                       "VALUE": {
+                        "block": {
+                         "type": "op_random",
+                         "inputs": {
+                          "A": {
+                           "shadow": {
+                            "type": "math_number",
+                            "fields": {
+                             "NUM": 1
+                            }
+                           }
+                          },
+                          "B": {
+                           "shadow": {
+                            "type": "math_number",
+                            "fields": {
+                             "NUM": 6
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      },
+                      "next": {
+                       "block": {
+                        "type": "variables_set",
+                        "fields": {
+                         "VAR": {
+                          "id": "var_n"
+                         }
+                        },
+                        "inputs": {
+                         "VALUE": {
+                          "shadow": {
+                           "type": "math_number",
+                           "fields": {
+                            "NUM": 1
+                           }
+                          }
+                         }
+                        },
+                        "next": {
+                         "block": {
+                          "type": "car_repeat",
+                          "inputs": {
+                           "TIMES": {
+                            "block": {
+                             "type": "variables_get",
+                             "fields": {
+                              "VAR": {
+                               "id": "var_de"
+                              }
+                             }
+                            }
+                           },
+                           "DO": {
+                            "block": {
+                             "type": "car_led",
+                             "fields": {
+                              "COLOUR": "255,200,0"
+                             },
+                             "inputs": {
+                              "N": {
+                               "block": {
+                                "type": "variables_get",
+                                "fields": {
+                                 "VAR": {
+                                  "id": "var_n"
+                                 }
+                                }
+                               }
+                              }
+                             },
+                             "next": {
+                              "block": {
+                               "type": "car_beep",
+                               "next": {
+                                "block": {
+                                 "type": "math_change",
+                                 "fields": {
+                                  "VAR": {
+                                   "id": "var_n"
+                                  }
+                                 },
+                                 "inputs": {
+                                  "DELTA": {
+                                   "shadow": {
+                                    "type": "math_number",
+                                    "fields": {
+                                     "NUM": 1
+                                    }
+                                   }
+                                  }
+                                 },
+                                 "next": {
+                                  "block": {
+                                   "type": "car_wait",
+                                   "inputs": {
+                                    "SEC": {
+                                     "shadow": {
+                                      "type": "math_number",
+                                      "fields": {
+                                       "NUM": 0.2
+                                      }
+                                     }
+                                    }
+                                   }
+                                  }
+                                 }
+                                }
+                               }
+                              }
+                             }
+                            }
+                           }
+                          },
+                          "next": {
+                           "block": {
+                            "type": "car_textnum",
+                            "fields": {
+                             "TEXT": "De :",
+                             "LINE": "1"
+                            },
+                            "inputs": {
+                             "VALUE": {
+                              "block": {
+                               "type": "variables_get",
+                               "fields": {
+                                "VAR": {
+                                 "id": "var_de"
+                                }
+                               }
+                              }
+                             }
+                            },
+                            "next": {
+                             "block": {
+                              "type": "car_ifelse",
+                              "inputs": {
+                               "COND": {
+                                "block": {
+                                 "type": "op_gt",
+                                 "inputs": {
+                                  "A": {
+                                   "block": {
+                                    "type": "variables_get",
+                                    "fields": {
+                                     "VAR": {
+                                      "id": "var_de"
+                                     }
+                                    }
+                                   }
+                                  },
+                                  "B": {
+                                   "shadow": {
+                                    "type": "math_number",
+                                    "fields": {
+                                     "NUM": 5
+                                    }
+                                   }
+                                  }
+                                 }
+                                }
+                               },
+                               "DO": {
+                                "block": {
+                                 "type": "car_face",
+                                 "fields": {
+                                  "FACE": "8"
+                                 },
+                                 "next": {
+                                  "block": {
+                                   "type": "car_tune",
+                                   "fields": {
+                                    "TUNE": "0"
+                                   }
+                                  }
+                                 }
+                                }
+                               },
+                               "ELSE": {
+                                "block": {
+                                 "type": "car_face",
+                                 "fields": {
+                                  "FACE": "0"
+                                 }
+                                }
+                               }
+                              }
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "variables": [
+   {
+    "name": "de",
+    "id": "var_de"
+   },
+   {
+    "name": "n",
+    "id": "var_n"
+   }
+  ],
+  "workspaceComments": [
+   {
+    "id": "explication",
+    "x": 0,
+    "y": 0,
+    "width": 440,
+    "height": 150,
+    "text": "Dé électronique\n\nAppuie sur OK : la voiture lance un dé. Elle allume autant de lumières que le résultat et l'écrit sur l'écran.\n\nOn apprend : nombre aléatoire, variables, répéter un nombre de fois qui change."
+   }
+  ]
+ }
+}

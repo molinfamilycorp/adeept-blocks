@@ -1,0 +1,186 @@
+{
+ "adeeptBlocs": 1,
+ "title": "Voiture télécommandée",
+ "description": "Pilote la voiture avec les flèches de la télécommande. Tant qu'on appuie, elle roule ; quand on lâche, elle s'arrête. Les yeux montrent la direction.",
+ "learn": "si … alors … sinon, touches de la télécommande, rouler sans s'arrêter",
+ "sim": {
+  "x": 40,
+  "y": 80,
+  "heading": 0
+ },
+ "workspace": {
+  "blocks": {
+   "languageVersion": 0,
+   "blocks": [
+    {
+     "type": "car_start",
+     "x": 0,
+     "y": 170,
+     "next": {
+      "block": {
+       "type": "car_speed",
+       "fields": {
+        "SPEED": "85"
+       },
+       "next": {
+        "block": {
+         "type": "car_forever",
+         "inputs": {
+          "DO": {
+           "block": {
+            "type": "car_ifelse",
+            "inputs": {
+             "COND": {
+              "block": {
+               "type": "car_key",
+               "fields": {
+                "KEY": "12"
+               }
+              }
+             },
+             "DO": {
+              "block": {
+               "type": "car_drive",
+               "fields": {
+                "MODE": "1"
+               },
+               "next": {
+                "block": {
+                 "type": "car_face",
+                 "fields": {
+                  "FACE": "13"
+                 }
+                }
+               }
+              }
+             },
+             "ELSE": {
+              "block": {
+               "type": "car_ifelse",
+               "inputs": {
+                "COND": {
+                 "block": {
+                  "type": "car_key",
+                  "fields": {
+                   "KEY": "13"
+                  }
+                 }
+                },
+                "DO": {
+                 "block": {
+                  "type": "car_drive",
+                  "fields": {
+                   "MODE": "2"
+                  },
+                  "next": {
+                   "block": {
+                    "type": "car_face",
+                    "fields": {
+                     "FACE": "14"
+                    }
+                   }
+                  }
+                 }
+                },
+                "ELSE": {
+                 "block": {
+                  "type": "car_ifelse",
+                  "inputs": {
+                   "COND": {
+                    "block": {
+                     "type": "car_key",
+                     "fields": {
+                      "KEY": "14"
+                     }
+                    }
+                   },
+                   "DO": {
+                    "block": {
+                     "type": "car_drive",
+                     "fields": {
+                      "MODE": "3"
+                     },
+                     "next": {
+                      "block": {
+                       "type": "car_face",
+                       "fields": {
+                        "FACE": "2"
+                       }
+                      }
+                     }
+                    }
+                   },
+                   "ELSE": {
+                    "block": {
+                     "type": "car_ifelse",
+                     "inputs": {
+                      "COND": {
+                       "block": {
+                        "type": "car_key",
+                        "fields": {
+                         "KEY": "15"
+                        }
+                       }
+                      },
+                      "DO": {
+                       "block": {
+                        "type": "car_drive",
+                        "fields": {
+                         "MODE": "4"
+                        },
+                        "next": {
+                         "block": {
+                          "type": "car_face",
+                          "fields": {
+                           "FACE": "3"
+                          }
+                         }
+                        }
+                       }
+                      },
+                      "ELSE": {
+                       "block": {
+                        "type": "car_stop",
+                        "next": {
+                         "block": {
+                          "type": "car_face",
+                          "fields": {
+                           "FACE": "1"
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "variables": [],
+  "workspaceComments": [
+   {
+    "id": "explication",
+    "x": 0,
+    "y": 0,
+    "width": 440,
+    "height": 150,
+    "text": "Voiture télécommandée\n\nPilote la voiture avec les flèches de la télécommande. Tant qu'on appuie, elle roule ; quand on lâche, elle s'arrête. Les yeux montrent la direction.\n\nOn apprend : si … alors … sinon, touches de la télécommande, rouler sans s'arrêter."
+   }
+  ]
+ }
+}

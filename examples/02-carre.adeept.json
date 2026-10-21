@@ -1,0 +1,98 @@
+{
+ "adeeptBlocs": 1,
+ "title": "Le carré",
+ "description": "La voiture dessine un carré : 4 fois « avancer puis tourner d'un quart de tour ». Essaie de faire un triangle (3 fois, 120 degrés) !",
+ "learn": "avancer, tourner, répéter",
+ "sim": {
+  "x": 40,
+  "y": 80,
+  "heading": 0
+ },
+ "workspace": {
+  "blocks": {
+   "languageVersion": 0,
+   "blocks": [
+    {
+     "type": "car_start",
+     "x": 0,
+     "y": 170,
+     "next": {
+      "block": {
+       "type": "car_face",
+       "fields": {
+        "FACE": "0"
+       },
+       "next": {
+        "block": {
+         "type": "car_repeat",
+         "inputs": {
+          "TIMES": {
+           "shadow": {
+            "type": "math_number",
+            "fields": {
+             "NUM": 4
+            }
+           }
+          },
+          "DO": {
+           "block": {
+            "type": "car_move",
+            "inputs": {
+             "CM": {
+              "shadow": {
+               "type": "math_number",
+               "fields": {
+                "NUM": 40
+               }
+              }
+             }
+            },
+            "next": {
+             "block": {
+              "type": "car_turn",
+              "fields": {
+               "DIR": "R"
+              },
+              "inputs": {
+               "DEG": {
+                "shadow": {
+                 "type": "math_number",
+                 "fields": {
+                  "NUM": 90
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         },
+         "next": {
+          "block": {
+           "type": "car_tune",
+           "fields": {
+            "TUNE": "0"
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "variables": [],
+  "workspaceComments": [
+   {
+    "id": "explication",
+    "x": 0,
+    "y": 0,
+    "width": 440,
+    "height": 150,
+    "text": "Le carré\n\nLa voiture dessine un carré : 4 fois « avancer puis tourner d'un quart de tour ». Essaie de faire un triangle (3 fois, 120 degrés) !\n\nOn apprend : avancer, tourner, répéter."
+   }
+  ]
+ }
+}

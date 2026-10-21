@@ -1,0 +1,281 @@
+{
+ "adeeptBlocs": 1,
+ "title": "Suiveur de ligne",
+ "description": "Trace une ligne noire au sol avec du ruban adhésif. La voiture la suit grâce à ses 3 capteurs du dessous. Si elle perd la ligne, elle se souvient de quel côté elle l'a vue en dernier et tourne de ce côté pour la retrouver.",
+ "learn": "capteurs de ligne, une variable qui sert de mémoire",
+ "sim": {
+  "x": 120,
+  "y": 130,
+  "heading": 180
+ },
+ "workspace": {
+  "blocks": {
+   "languageVersion": 0,
+   "blocks": [
+    {
+     "type": "car_start",
+     "x": 0,
+     "y": 170,
+     "next": {
+      "block": {
+       "type": "car_speed",
+       "fields": {
+        "SPEED": "40"
+       },
+       "next": {
+        "block": {
+         "type": "variables_set",
+         "fields": {
+          "VAR": {
+           "id": "var_cote"
+          }
+         },
+         "inputs": {
+          "VALUE": {
+           "shadow": {
+            "type": "math_number",
+            "fields": {
+             "NUM": 0
+            }
+           }
+          }
+         },
+         "next": {
+          "block": {
+           "type": "car_text",
+           "fields": {
+            "TEXT": "Je suis",
+            "LINE": "0"
+           },
+           "next": {
+            "block": {
+             "type": "car_text",
+             "fields": {
+              "TEXT": "la ligne",
+              "LINE": "1"
+             },
+             "next": {
+              "block": {
+               "type": "car_forever",
+               "inputs": {
+                "DO": {
+                 "block": {
+                  "type": "car_ifelse",
+                  "inputs": {
+                   "COND": {
+                    "block": {
+                     "type": "car_line",
+                     "fields": {
+                      "WHICH": "1"
+                     }
+                    }
+                   },
+                   "DO": {
+                    "block": {
+                     "type": "car_drive",
+                     "fields": {
+                      "MODE": "1"
+                     },
+                     "next": {
+                      "block": {
+                       "type": "car_face",
+                       "fields": {
+                        "FACE": "13"
+                       }
+                      }
+                     }
+                    }
+                   },
+                   "ELSE": {
+                    "block": {
+                     "type": "car_ifelse",
+                     "inputs": {
+                      "COND": {
+                       "block": {
+                        "type": "car_line",
+                        "fields": {
+                         "WHICH": "0"
+                        }
+                       }
+                      },
+                      "DO": {
+                       "block": {
+                        "type": "car_drive",
+                        "fields": {
+                         "MODE": "3"
+                        },
+                        "next": {
+                         "block": {
+                          "type": "car_face",
+                          "fields": {
+                           "FACE": "2"
+                          },
+                          "next": {
+                           "block": {
+                            "type": "variables_set",
+                            "fields": {
+                             "VAR": {
+                              "id": "var_cote"
+                             }
+                            },
+                            "inputs": {
+                             "VALUE": {
+                              "shadow": {
+                               "type": "math_number",
+                               "fields": {
+                                "NUM": -1
+                               }
+                              }
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      },
+                      "ELSE": {
+                       "block": {
+                        "type": "car_ifelse",
+                        "inputs": {
+                         "COND": {
+                          "block": {
+                           "type": "car_line",
+                           "fields": {
+                            "WHICH": "2"
+                           }
+                          }
+                         },
+                         "DO": {
+                          "block": {
+                           "type": "car_drive",
+                           "fields": {
+                            "MODE": "4"
+                           },
+                           "next": {
+                            "block": {
+                             "type": "car_face",
+                             "fields": {
+                              "FACE": "3"
+                             },
+                             "next": {
+                              "block": {
+                               "type": "variables_set",
+                               "fields": {
+                                "VAR": {
+                                 "id": "var_cote"
+                                }
+                               },
+                               "inputs": {
+                                "VALUE": {
+                                 "shadow": {
+                                  "type": "math_number",
+                                  "fields": {
+                                   "NUM": 1
+                                  }
+                                 }
+                                }
+                               }
+                              }
+                             }
+                            }
+                           }
+                          }
+                         },
+                         "ELSE": {
+                          "block": {
+                           "type": "car_face",
+                           "fields": {
+                            "FACE": "5"
+                           },
+                           "next": {
+                            "block": {
+                             "type": "car_ifelse",
+                             "inputs": {
+                              "COND": {
+                               "block": {
+                                "type": "op_lt",
+                                "inputs": {
+                                 "A": {
+                                  "block": {
+                                   "type": "variables_get",
+                                   "fields": {
+                                    "VAR": {
+                                     "id": "var_cote"
+                                    }
+                                   }
+                                  }
+                                 },
+                                 "B": {
+                                  "shadow": {
+                                   "type": "math_number",
+                                   "fields": {
+                                    "NUM": 0
+                                   }
+                                  }
+                                 }
+                                }
+                               }
+                              },
+                              "DO": {
+                               "block": {
+                                "type": "car_drive",
+                                "fields": {
+                                 "MODE": "3"
+                                }
+                               }
+                              },
+                              "ELSE": {
+                               "block": {
+                                "type": "car_drive",
+                                "fields": {
+                                 "MODE": "4"
+                                }
+                               }
+                              }
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "variables": [
+   {
+    "name": "cote",
+    "id": "var_cote"
+   }
+  ],
+  "workspaceComments": [
+   {
+    "id": "explication",
+    "x": 0,
+    "y": 0,
+    "width": 440,
+    "height": 150,
+    "text": "Suiveur de ligne\n\nTrace une ligne noire au sol avec du ruban adhésif. La voiture la suit grâce à ses 3 capteurs du dessous. Si elle perd la ligne, elle se souvient de quel côté elle l'a vue en dernier et tourne de ce côté pour la retrouver.\n\nOn apprend : capteurs de ligne, une variable qui sert de mémoire."
+   }
+  ]
+ }
+}

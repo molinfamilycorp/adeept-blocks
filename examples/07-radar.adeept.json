@@ -1,0 +1,225 @@
+{
+ "adeeptBlocs": 1,
+ "title": "Radar",
+ "description": "La voiture ne bouge pas : elle mesure la distance devant elle et l'écrit. Vert = c'est loin, orange = attention, rouge = trop près (et elle bipe) ! Approche ta main.",
+ "learn": "capteur de distance, variable, comparer des nombres",
+ "sim": {
+  "x": 40,
+  "y": 80,
+  "heading": 0
+ },
+ "workspace": {
+  "blocks": {
+   "languageVersion": 0,
+   "blocks": [
+    {
+     "type": "car_start",
+     "x": 0,
+     "y": 170,
+     "next": {
+      "block": {
+       "type": "car_forever",
+       "inputs": {
+        "DO": {
+         "block": {
+          "type": "variables_set",
+          "fields": {
+           "VAR": {
+            "id": "var_d"
+           }
+          },
+          "inputs": {
+           "VALUE": {
+            "block": {
+             "type": "car_distance"
+            }
+           }
+          },
+          "next": {
+           "block": {
+            "type": "car_textnum",
+            "fields": {
+             "TEXT": "Dist",
+             "LINE": "0"
+            },
+            "inputs": {
+             "VALUE": {
+              "block": {
+               "type": "variables_get",
+               "fields": {
+                "VAR": {
+                 "id": "var_d"
+                }
+               }
+              }
+             }
+            },
+            "next": {
+             "block": {
+              "type": "car_text",
+              "fields": {
+               "TEXT": "cm",
+               "LINE": "1"
+              },
+              "next": {
+               "block": {
+                "type": "car_ifelse",
+                "inputs": {
+                 "COND": {
+                  "block": {
+                   "type": "op_lt",
+                   "inputs": {
+                    "A": {
+                     "block": {
+                      "type": "variables_get",
+                      "fields": {
+                       "VAR": {
+                        "id": "var_d"
+                       }
+                      }
+                     }
+                    },
+                    "B": {
+                     "shadow": {
+                      "type": "math_number",
+                      "fields": {
+                       "NUM": 20
+                      }
+                     }
+                    }
+                   }
+                  }
+                 },
+                 "DO": {
+                  "block": {
+                   "type": "car_leds",
+                   "fields": {
+                    "COLOUR": "255,0,0"
+                   },
+                   "next": {
+                    "block": {
+                     "type": "car_face",
+                     "fields": {
+                      "FACE": "5"
+                     },
+                     "next": {
+                      "block": {
+                       "type": "car_beep"
+                      }
+                     }
+                    }
+                   }
+                  }
+                 },
+                 "ELSE": {
+                  "block": {
+                   "type": "car_ifelse",
+                   "inputs": {
+                    "COND": {
+                     "block": {
+                      "type": "op_lt",
+                      "inputs": {
+                       "A": {
+                        "block": {
+                         "type": "variables_get",
+                         "fields": {
+                          "VAR": {
+                           "id": "var_d"
+                          }
+                         }
+                        }
+                       },
+                       "B": {
+                        "shadow": {
+                         "type": "math_number",
+                         "fields": {
+                          "NUM": 50
+                         }
+                        }
+                       }
+                      }
+                     }
+                    },
+                    "DO": {
+                     "block": {
+                      "type": "car_leds",
+                      "fields": {
+                       "COLOUR": "255,90,0"
+                      },
+                      "next": {
+                       "block": {
+                        "type": "car_face",
+                        "fields": {
+                         "FACE": "1"
+                        }
+                       }
+                      }
+                     }
+                    },
+                    "ELSE": {
+                     "block": {
+                      "type": "car_leds",
+                      "fields": {
+                       "COLOUR": "0,255,0"
+                      },
+                      "next": {
+                       "block": {
+                        "type": "car_face",
+                        "fields": {
+                         "FACE": "0"
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                },
+                "next": {
+                 "block": {
+                  "type": "car_wait",
+                  "inputs": {
+                   "SEC": {
+                    "shadow": {
+                     "type": "math_number",
+                     "fields": {
+                      "NUM": 0.2
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "variables": [
+   {
+    "name": "d",
+    "id": "var_d"
+   }
+  ],
+  "workspaceComments": [
+   {
+    "id": "explication",
+    "x": 0,
+    "y": 0,
+    "width": 440,
+    "height": 150,
+    "text": "Radar\n\nLa voiture ne bouge pas : elle mesure la distance devant elle et l'écrit. Vert = c'est loin, orange = attention, rouge = trop près (et elle bipe) ! Approche ta main.\n\nOn apprend : capteur de distance, variable, comparer des nombres."
+   }
+  ]
+ }
+}

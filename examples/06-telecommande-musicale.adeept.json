@@ -1,0 +1,602 @@
+{
+ "adeeptBlocs": 1,
+ "title": "Télécommande musicale",
+ "description": "Comme la voiture télécommandée, mais les chiffres font des choses : 1 à 7 jouent Do Ré Mi Fa Sol La Si, 8 allume un arc-en-ciel, 9 met la sirène, 0 éteint tout, OK fait un clin d'œil.",
+ "learn": "plusieurs « si » à la suite",
+ "sim": {
+  "x": 40,
+  "y": 80,
+  "heading": 0
+ },
+ "workspace": {
+  "blocks": {
+   "languageVersion": 0,
+   "blocks": [
+    {
+     "type": "car_start",
+     "x": 0,
+     "y": 170,
+     "next": {
+      "block": {
+       "type": "car_speed",
+       "fields": {
+        "SPEED": "85"
+       },
+       "next": {
+        "block": {
+         "type": "car_forever",
+         "inputs": {
+          "DO": {
+           "block": {
+            "type": "car_ifelse",
+            "inputs": {
+             "COND": {
+              "block": {
+               "type": "car_key",
+               "fields": {
+                "KEY": "12"
+               }
+              }
+             },
+             "DO": {
+              "block": {
+               "type": "car_drive",
+               "fields": {
+                "MODE": "1"
+               }
+              }
+             },
+             "ELSE": {
+              "block": {
+               "type": "car_ifelse",
+               "inputs": {
+                "COND": {
+                 "block": {
+                  "type": "car_key",
+                  "fields": {
+                   "KEY": "13"
+                  }
+                 }
+                },
+                "DO": {
+                 "block": {
+                  "type": "car_drive",
+                  "fields": {
+                   "MODE": "2"
+                  }
+                 }
+                },
+                "ELSE": {
+                 "block": {
+                  "type": "car_ifelse",
+                  "inputs": {
+                   "COND": {
+                    "block": {
+                     "type": "car_key",
+                     "fields": {
+                      "KEY": "14"
+                     }
+                    }
+                   },
+                   "DO": {
+                    "block": {
+                     "type": "car_drive",
+                     "fields": {
+                      "MODE": "3"
+                     }
+                    }
+                   },
+                   "ELSE": {
+                    "block": {
+                     "type": "car_ifelse",
+                     "inputs": {
+                      "COND": {
+                       "block": {
+                        "type": "car_key",
+                        "fields": {
+                         "KEY": "15"
+                        }
+                       }
+                      },
+                      "DO": {
+                       "block": {
+                        "type": "car_drive",
+                        "fields": {
+                         "MODE": "4"
+                        }
+                       }
+                      },
+                      "ELSE": {
+                       "block": {
+                        "type": "car_stop"
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            },
+            "next": {
+             "block": {
+              "type": "car_if",
+              "inputs": {
+               "COND": {
+                "block": {
+                 "type": "car_key",
+                 "fields": {
+                  "KEY": "1"
+                 }
+                }
+               },
+               "DO": {
+                "block": {
+                 "type": "car_note",
+                 "fields": {
+                  "NOTE": "262"
+                 },
+                 "inputs": {
+                  "SEC": {
+                   "shadow": {
+                    "type": "math_number",
+                    "fields": {
+                     "NUM": 0.2
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              },
+              "next": {
+               "block": {
+                "type": "car_if",
+                "inputs": {
+                 "COND": {
+                  "block": {
+                   "type": "car_key",
+                   "fields": {
+                    "KEY": "2"
+                   }
+                  }
+                 },
+                 "DO": {
+                  "block": {
+                   "type": "car_note",
+                   "fields": {
+                    "NOTE": "294"
+                   },
+                   "inputs": {
+                    "SEC": {
+                     "shadow": {
+                      "type": "math_number",
+                      "fields": {
+                       "NUM": 0.2
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                },
+                "next": {
+                 "block": {
+                  "type": "car_if",
+                  "inputs": {
+                   "COND": {
+                    "block": {
+                     "type": "car_key",
+                     "fields": {
+                      "KEY": "3"
+                     }
+                    }
+                   },
+                   "DO": {
+                    "block": {
+                     "type": "car_note",
+                     "fields": {
+                      "NOTE": "330"
+                     },
+                     "inputs": {
+                      "SEC": {
+                       "shadow": {
+                        "type": "math_number",
+                        "fields": {
+                         "NUM": 0.2
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  },
+                  "next": {
+                   "block": {
+                    "type": "car_if",
+                    "inputs": {
+                     "COND": {
+                      "block": {
+                       "type": "car_key",
+                       "fields": {
+                        "KEY": "4"
+                       }
+                      }
+                     },
+                     "DO": {
+                      "block": {
+                       "type": "car_note",
+                       "fields": {
+                        "NOTE": "349"
+                       },
+                       "inputs": {
+                        "SEC": {
+                         "shadow": {
+                          "type": "math_number",
+                          "fields": {
+                           "NUM": 0.2
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    },
+                    "next": {
+                     "block": {
+                      "type": "car_if",
+                      "inputs": {
+                       "COND": {
+                        "block": {
+                         "type": "car_key",
+                         "fields": {
+                          "KEY": "5"
+                         }
+                        }
+                       },
+                       "DO": {
+                        "block": {
+                         "type": "car_note",
+                         "fields": {
+                          "NOTE": "392"
+                         },
+                         "inputs": {
+                          "SEC": {
+                           "shadow": {
+                            "type": "math_number",
+                            "fields": {
+                             "NUM": 0.2
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      },
+                      "next": {
+                       "block": {
+                        "type": "car_if",
+                        "inputs": {
+                         "COND": {
+                          "block": {
+                           "type": "car_key",
+                           "fields": {
+                            "KEY": "6"
+                           }
+                          }
+                         },
+                         "DO": {
+                          "block": {
+                           "type": "car_note",
+                           "fields": {
+                            "NOTE": "440"
+                           },
+                           "inputs": {
+                            "SEC": {
+                             "shadow": {
+                              "type": "math_number",
+                              "fields": {
+                               "NUM": 0.2
+                              }
+                             }
+                            }
+                           }
+                          }
+                         }
+                        },
+                        "next": {
+                         "block": {
+                          "type": "car_if",
+                          "inputs": {
+                           "COND": {
+                            "block": {
+                             "type": "car_key",
+                             "fields": {
+                              "KEY": "7"
+                             }
+                            }
+                           },
+                           "DO": {
+                            "block": {
+                             "type": "car_note",
+                             "fields": {
+                              "NOTE": "494"
+                             },
+                             "inputs": {
+                              "SEC": {
+                               "shadow": {
+                                "type": "math_number",
+                                "fields": {
+                                 "NUM": 0.2
+                                }
+                               }
+                              }
+                             }
+                            }
+                           }
+                          },
+                          "next": {
+                           "block": {
+                            "type": "car_if",
+                            "inputs": {
+                             "COND": {
+                              "block": {
+                               "type": "car_key",
+                               "fields": {
+                                "KEY": "8"
+                               }
+                              }
+                             },
+                             "DO": {
+                              "block": {
+                               "type": "car_led",
+                               "fields": {
+                                "COLOUR": "255,0,0"
+                               },
+                               "inputs": {
+                                "N": {
+                                 "shadow": {
+                                  "type": "math_number",
+                                  "fields": {
+                                   "NUM": 1
+                                  }
+                                 }
+                                }
+                               },
+                               "next": {
+                                "block": {
+                                 "type": "car_led",
+                                 "fields": {
+                                  "COLOUR": "255,90,0"
+                                 },
+                                 "inputs": {
+                                  "N": {
+                                   "shadow": {
+                                    "type": "math_number",
+                                    "fields": {
+                                     "NUM": 2
+                                    }
+                                   }
+                                  }
+                                 },
+                                 "next": {
+                                  "block": {
+                                   "type": "car_led",
+                                   "fields": {
+                                    "COLOUR": "255,200,0"
+                                   },
+                                   "inputs": {
+                                    "N": {
+                                     "shadow": {
+                                      "type": "math_number",
+                                      "fields": {
+                                       "NUM": 3
+                                      }
+                                     }
+                                    }
+                                   },
+                                   "next": {
+                                    "block": {
+                                     "type": "car_led",
+                                     "fields": {
+                                      "COLOUR": "0,255,0"
+                                     },
+                                     "inputs": {
+                                      "N": {
+                                       "shadow": {
+                                        "type": "math_number",
+                                        "fields": {
+                                         "NUM": 4
+                                        }
+                                       }
+                                      }
+                                     },
+                                     "next": {
+                                      "block": {
+                                       "type": "car_led",
+                                       "fields": {
+                                        "COLOUR": "0,220,255"
+                                       },
+                                       "inputs": {
+                                        "N": {
+                                         "shadow": {
+                                          "type": "math_number",
+                                          "fields": {
+                                           "NUM": 5
+                                          }
+                                         }
+                                        }
+                                       },
+                                       "next": {
+                                        "block": {
+                                         "type": "car_led",
+                                         "fields": {
+                                          "COLOUR": "0,0,255"
+                                         },
+                                         "inputs": {
+                                          "N": {
+                                           "shadow": {
+                                            "type": "math_number",
+                                            "fields": {
+                                             "NUM": 6
+                                            }
+                                           }
+                                          }
+                                         },
+                                         "next": {
+                                          "block": {
+                                           "type": "car_led",
+                                           "fields": {
+                                            "COLOUR": "150,0,255"
+                                           },
+                                           "inputs": {
+                                            "N": {
+                                             "shadow": {
+                                              "type": "math_number",
+                                              "fields": {
+                                               "NUM": 7
+                                              }
+                                             }
+                                            }
+                                           }
+                                          }
+                                         }
+                                        }
+                                       }
+                                      }
+                                     }
+                                    }
+                                   }
+                                  }
+                                 }
+                                }
+                               }
+                              }
+                             }
+                            },
+                            "next": {
+                             "block": {
+                              "type": "car_if",
+                              "inputs": {
+                               "COND": {
+                                "block": {
+                                 "type": "car_key",
+                                 "fields": {
+                                  "KEY": "9"
+                                 }
+                                }
+                               },
+                               "DO": {
+                                "block": {
+                                 "type": "car_leds",
+                                 "fields": {
+                                  "COLOUR": "0,0,255"
+                                 },
+                                 "next": {
+                                  "block": {
+                                   "type": "car_tune",
+                                   "fields": {
+                                    "TUNE": "5"
+                                   },
+                                   "next": {
+                                    "block": {
+                                     "type": "car_leds_off"
+                                    }
+                                   }
+                                  }
+                                 }
+                                }
+                               }
+                              },
+                              "next": {
+                               "block": {
+                                "type": "car_if",
+                                "inputs": {
+                                 "COND": {
+                                  "block": {
+                                   "type": "car_key",
+                                   "fields": {
+                                    "KEY": "0"
+                                   }
+                                  }
+                                 },
+                                 "DO": {
+                                  "block": {
+                                   "type": "car_leds_off",
+                                   "next": {
+                                    "block": {
+                                     "type": "car_face_off"
+                                    }
+                                   }
+                                  }
+                                 }
+                                },
+                                "next": {
+                                 "block": {
+                                  "type": "car_if",
+                                  "inputs": {
+                                   "COND": {
+                                    "block": {
+                                     "type": "car_key",
+                                     "fields": {
+                                      "KEY": "16"
+                                     }
+                                    }
+                                   },
+                                   "DO": {
+                                    "block": {
+                                     "type": "car_face",
+                                     "fields": {
+                                      "FACE": "9"
+                                     }
+                                    }
+                                   }
+                                  }
+                                 }
+                                }
+                               }
+                              }
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "variables": [],
+  "workspaceComments": [
+   {
+    "id": "explication",
+    "x": 0,
+    "y": 0,
+    "width": 440,
+    "height": 150,
+    "text": "Télécommande musicale\n\nComme la voiture télécommandée, mais les chiffres font des choses : 1 à 7 jouent Do Ré Mi Fa Sol La Si, 8 allume un arc-en-ciel, 9 met la sirène, 0 éteint tout, OK fait un clin d'œil.\n\nOn apprend : plusieurs « si » à la suite."
+   }
+  ]
+ }
+}

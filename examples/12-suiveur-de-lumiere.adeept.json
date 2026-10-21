@@ -1,0 +1,252 @@
+{
+ "adeeptBlocs": 1,
+ "title": "Suiveur de lumière",
+ "description": "La voiture va vers la lumière, comme un papillon de nuit. Éclaire-la avec une lampe de poche sur un côté. Dans le simulateur, la lampe est en haut à gauche.",
+ "learn": "capteur de lumière, nombres négatifs",
+ "sim": {
+  "x": 210,
+  "y": 40,
+  "heading": 90
+ },
+ "workspace": {
+  "blocks": {
+   "languageVersion": 0,
+   "blocks": [
+    {
+     "type": "car_start",
+     "x": 0,
+     "y": 170,
+     "next": {
+      "block": {
+       "type": "car_speed",
+       "fields": {
+        "SPEED": "40"
+       },
+       "next": {
+        "block": {
+         "type": "car_forever",
+         "inputs": {
+          "DO": {
+           "block": {
+            "type": "variables_set",
+            "fields": {
+             "VAR": {
+              "id": "var_lumiere"
+             }
+            },
+            "inputs": {
+             "VALUE": {
+              "block": {
+               "type": "car_light"
+              }
+             }
+            },
+            "next": {
+             "block": {
+              "type": "car_textnum",
+              "fields": {
+               "TEXT": "Lum",
+               "LINE": "0"
+              },
+              "inputs": {
+               "VALUE": {
+                "block": {
+                 "type": "variables_get",
+                 "fields": {
+                  "VAR": {
+                   "id": "var_lumiere"
+                  }
+                 }
+                }
+               }
+              },
+              "next": {
+               "block": {
+                "type": "car_ifelse",
+                "inputs": {
+                 "COND": {
+                  "block": {
+                   "type": "car_obstacle",
+                   "inputs": {
+                    "CM": {
+                     "shadow": {
+                      "type": "math_number",
+                      "fields": {
+                       "NUM": 15
+                      }
+                     }
+                    }
+                   }
+                  }
+                 },
+                 "DO": {
+                  "block": {
+                   "type": "car_stop",
+                   "next": {
+                    "block": {
+                     "type": "car_face",
+                     "fields": {
+                      "FACE": "8"
+                     },
+                     "next": {
+                      "block": {
+                       "type": "car_leds",
+                       "fields": {
+                        "COLOUR": "255,200,0"
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 },
+                 "ELSE": {
+                  "block": {
+                   "type": "car_leds_off",
+                   "next": {
+                    "block": {
+                     "type": "car_ifelse",
+                     "inputs": {
+                      "COND": {
+                       "block": {
+                        "type": "op_lt",
+                        "inputs": {
+                         "A": {
+                          "block": {
+                           "type": "variables_get",
+                           "fields": {
+                            "VAR": {
+                             "id": "var_lumiere"
+                            }
+                           }
+                          }
+                         },
+                         "B": {
+                          "shadow": {
+                           "type": "math_number",
+                           "fields": {
+                            "NUM": -20
+                           }
+                          }
+                         }
+                        }
+                       }
+                      },
+                      "DO": {
+                       "block": {
+                        "type": "car_drive",
+                        "fields": {
+                         "MODE": "3"
+                        },
+                        "next": {
+                         "block": {
+                          "type": "car_face",
+                          "fields": {
+                           "FACE": "2"
+                          }
+                         }
+                        }
+                       }
+                      },
+                      "ELSE": {
+                       "block": {
+                        "type": "car_ifelse",
+                        "inputs": {
+                         "COND": {
+                          "block": {
+                           "type": "op_gt",
+                           "inputs": {
+                            "A": {
+                             "block": {
+                              "type": "variables_get",
+                              "fields": {
+                               "VAR": {
+                                "id": "var_lumiere"
+                               }
+                              }
+                             }
+                            },
+                            "B": {
+                             "shadow": {
+                              "type": "math_number",
+                              "fields": {
+                               "NUM": 20
+                              }
+                             }
+                            }
+                           }
+                          }
+                         },
+                         "DO": {
+                          "block": {
+                           "type": "car_drive",
+                           "fields": {
+                            "MODE": "4"
+                           },
+                           "next": {
+                            "block": {
+                             "type": "car_face",
+                             "fields": {
+                              "FACE": "3"
+                             }
+                            }
+                           }
+                          }
+                         },
+                         "ELSE": {
+                          "block": {
+                           "type": "car_drive",
+                           "fields": {
+                            "MODE": "1"
+                           },
+                           "next": {
+                            "block": {
+                             "type": "car_face",
+                             "fields": {
+                              "FACE": "1"
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "variables": [
+   {
+    "name": "lumiere",
+    "id": "var_lumiere"
+   }
+  ],
+  "workspaceComments": [
+   {
+    "id": "explication",
+    "x": 0,
+    "y": 0,
+    "width": 440,
+    "height": 150,
+    "text": "Suiveur de lumière\n\nLa voiture va vers la lumière, comme un papillon de nuit. Éclaire-la avec une lampe de poche sur un côté. Dans le simulateur, la lampe est en haut à gauche.\n\nOn apprend : capteur de lumière, nombres négatifs."
+   }
+  ]
+ }
+}
