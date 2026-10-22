@@ -138,6 +138,19 @@
   .example b { color: var(--blue-dark); font-size: 15px; }
   .example p { margin: 3px 0 0; font-size: 13px; }
   .example .learn { font-style: italic; color: #888; }
+  .cu-group { font-size: 12px; color: #888; margin: 0 0 4px; }
+  .cu-setup { background: #fff7e0; border-radius: 8px; padding: 8px 10px; font-size: 14px; }
+  .cu-question { font-size: 16px; font-weight: 600; color: var(--blue-dark); }
+  .cu-answers { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cu-msg { font-size: 13px; min-height: 1em; }
+  .cu-live {
+    font-family: Menlo, Consolas, monospace; font-size: 18px; background: #f5f7fb;
+    padding: 10px 12px; border-radius: 8px; margin: 8px 0;
+  }
+  .cu-report {
+    font-size: 12px; background: #f5f7fb; padding: 10px; border-radius: 8px;
+    white-space: pre-wrap; max-height: 40vh; overflow: auto;
+  }
   #sensorView { font-family: Menlo, Consolas, monospace; font-size: 13px; white-space: pre; background: #f5f7fb; padding: 8px; border-radius: 6px; }
   .blocklyToolboxCategory {
     height: 34px !important;
@@ -170,6 +183,7 @@
   <button id="btnExamples" title="Des programmes tout prêts pour apprendre">📚 Exemples</button>
   <button id="btnOpen" title="Ouvrir un programme enregistré">📂 Ouvrir</button>
   <button id="btnSave" title="Enregistrer le programme dans un fichier">💾 Enregistrer</button>
+  <button id="btnCheckup" title="Vérifier pas à pas que tout fonctionne sur la voiture">🩺 Checkup</button>
   <button id="btnSettings" title="Réglages, capteurs, installation">⚙️ Réglages</button>
   <input type="file" id="fileInput" accept=".json,.adeept" hidden>
 </header>
@@ -216,12 +230,20 @@
       <h3>1. Installer le programme de base (une seule fois)</h3>
       <p class="help">La voiture a besoin d'un programme spécial pour comprendre les blocs. Branche la voiture en USB, <b>retire le petit module WiFi ESP8266</b> s'il est en place, puis clique. Il faut Chrome ou Edge.</p>
       <div class="row"><button id="btnFlash">Installer / mettre à jour</button><span id="flashMsg" class="small"></span></div>
+      <p class="help" id="versionInfo"></p>
       <progress id="flashProgress" value="0" max="1" hidden></progress>
     </section>
     <section>
       <h3>2. Ma voiture</h3>
       <label><input type="checkbox" id="setMecanum"> Elle a des roues Mecanum (elle peut glisser de côté)</label>
       <label><input type="checkbox" id="setInvertHead"> Sa tête tourne du mauvais côté</label>
+      <label>Le servo de la tête est branché sur
+        <select id="setHeadPort">
+          <option value="0">A1 (comme dans la notice)</option>
+          <option value="1">A2</option>
+          <option value="2">CH6</option>
+          <option value="3">CH7</option>
+        </select></label>
       <label><input type="checkbox" id="setStartWithOk"> Attendre la touche OK de la télécommande pour démarrer (sinon : départ après 3 bips)</label>
     </section>
     <section>
@@ -265,18 +287,24 @@
   </div>
 </dialog>
 
+<dialog id="checkupDlg">
+  <header><h1 style="font-size:18px">🩺 Checkup de la voiture</h1><span class="spacer" style="flex:1"></span><button id="btnCloseCheckup">Fermer</button></header>
+  <div class="body" id="checkupBody"></div>
+</dialog>
+
 <div id="toast"></div>
 
 <script src="vendor/blockly/blockly_compressed.js"></script>
 <script src="vendor/blockly/blocks_compressed.js"></script>
 <script src="vendor/blockly/msg/fr.js"></script>
-<script src="faces.js"></script>
-<script src="examples.js"></script>
-<script src="firmware.js"></script>
-<script src="blocks.js"></script>
-<script src="compiler.js"></script>
-<script src="simulator.js"></script>
-<script src="serial.js"></script>
-<script src="app.js"></script>
+<script src="faces.js?v=4"></script>
+<script src="examples.js?v=4"></script>
+<script src="firmware.js?v=4"></script>
+<script src="blocks.js?v=4"></script>
+<script src="compiler.js?v=4"></script>
+<script src="simulator.js?v=4"></script>
+<script src="serial.js?v=4"></script>
+<script src="app.js?v=4"></script>
+<script src="checkup.js?v=4"></script>
 </body>
 </html>

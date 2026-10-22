@@ -324,7 +324,7 @@ function buildImage(code, nvars, settings, sourceMap = []) {
     code.length & 0xFF, code.length >> 8,
     ms90 & 0xFF, ms90 >> 8,
     cmps10 & 0xFF, cmps10 >> 8,
-    settings.moveSpeed, settings.turnSpeed, nvars, sum, wheelInvert, 0,
+    settings.moveSpeed, settings.turnSpeed, nvars, sum, wheelInvert, settings.headPort & 3,
   ];
   return {bytes: Uint8Array.from([...header, ...code]), sourceMap, size};
 }

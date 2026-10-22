@@ -6,6 +6,7 @@ const DEFAULT_SETTINGS = {
   // on the car this was first tried on, compared with Adeept's published code.
   invertWheels: [false, false, true, true],
   invertHead: false,
+  headPort: 0,  // 0 A1 (as in the assembly guide), 1 A2, 2 PCA9685 CH6, 3 CH7
   startWithOk: false,
   cmps: 25,
   ms90: 550,
@@ -215,6 +216,8 @@ async function ensureConnected() {
       return false;
     }
     setStatus(true);
+    if ($('settings').open)
+      showVersions();
     if (link.version < FIRMWARE_VERSION)
       toast('Le programme de base de la voiture est ancien : mets-le à jour dans ⚙️ Réglages (étape 1).', 'error', 9000);
     return true;
@@ -293,6 +296,7 @@ function fillSettings() {
   for (const [id, key] of Object.entries(BOOL_SETTINGS))
     $(id).checked = settings[key];
   settings.invertWheels.forEach((v, i) => { $('setWheel' + i).checked = v; });
+  $('setHeadPort').value = settings.headPort;
 }
 
 function readSettings() {
@@ -308,12 +312,13 @@ function readSettings() {
   for (const [id, key] of Object.entries(BOOL_SETTINGS))
     settings[key] = $(id).checked;
   settings.invertWheels = [0, 1, 2, 3].map(i => $('setWheel' + i).checked);
+  settings.headPort = Number($('setHeadPort').value);
   if (wasMecanum !== settings.mecanum)
     ws.updateToolbox(buildToolbox(settings.mecanum));
   saveJSON('adeept.settings', settings);
 }
 
-document.querySelectorAll('#settings input').forEach(el => el.addEventListener('change', readSettings));
+document.querySelectorAll('#settings input, #settings select').forEach(el => el.addEventListener('change', readSettings));
 
 let sensorTimer = null;
 async function pollSensors() {
@@ -335,8 +340,16 @@ async function pollSensors() {
   }
 }
 
+function showVersions() {
+  let car = 'voiture non connectée';
+  if (link.connected)
+    car = link.version >= FIRMWARE_VERSION ? `voiture v${link.version} ✓ à jour` : `voiture v${link.version} ⚠️ à mettre à jour`;
+  $('versionInfo').textContent = `Programme de base : éditeur v${FIRMWARE_VERSION}, ${car}.`;
+}
+
 $('btnSettings').onclick = () => {
   fillSettings();
+  showVersions();
   $('settings').showModal();
   pollSensors();
   sensorTimer = setInterval(pollSensors, 600);
@@ -361,28 +374,30 @@ $('btnTestMove').onclick = () => calibrationTest('move');
 $('btnTestTurn').onclick = () => calibrationTest('turn');
 $('btnTestWheels').onclick = () => calibrationTest('wheels');
 
-$('btnFlash').onclick = async () => {
+// Installs the firmware; button, bar and msg show the progress. Returns true when the car answers.
+async function installFirmware(button, bar, msg) {
   if (!CarLink.supported()) {
     toast('Il faut Chrome ou Edge pour installer le programme de base.', 'error');
-    return;
+    return false;
   }
-  const bar = $('flashProgress');
-  const msg = $('flashMsg');
+  let ok = false;
   try {
     if (!link.port)
       await link.choosePort();
     await link.disconnect();
     setStatus(false, 'Installation…');
     bar.hidden = false;
-    $('btnFlash').disabled = true;
+    button.disabled = true;
     await flashFirmware(link.port, FIRMWARE_HEX, (f, text) => {
       bar.value = f;
       msg.textContent = text;
     });
     msg.textContent = 'Installé ✓ Connexion…';
     await sleep(500);
-    if (await ensureConnected())
+    ok = await ensureConnected();
+    if (ok)
       msg.textContent = 'Installé ✓ La voiture est prête.';
+    showVersions();
   } catch (err) {
     if (err.name !== 'NotFoundError') {
       msg.textContent = '';
@@ -391,9 +406,12 @@ $('btnFlash').onclick = async () => {
     setStatus(false);
   } finally {
     bar.hidden = true;
-    $('btnFlash').disabled = false;
+    button.disabled = false;
   }
-};
+  return ok;
+}
+
+$('btnFlash').onclick = () => installFirmware($('btnFlash'), $('flashProgress'), $('flashMsg'));
 
 if (!CarLink.supported())
   setStatus(false, 'Simulateur seulement (Chrome/Edge pour la voiture)');

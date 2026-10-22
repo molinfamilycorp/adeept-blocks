@@ -17,7 +17,7 @@
 #include "faces.h"
 #include "bytecode.h"
 
-#define FW_VERSION 2
+#define FW_VERSION 4
 
 #define PIN_IR      2
 #define PIN_BUZZER  3
@@ -27,7 +27,7 @@
 #define PIN_TRIG    7
 #define PIN_ECHO    8
 #define PIN_LIGHT   A0
-#define PIN_HEAD    A1
+#define PIN_HEAD    A1  // as in Adeept's assembly guide; A2 and PCA9685 CH6/CH7 also work
 #define PIN_RGB     A3  // WS2812 data line, shared with the battery divider
 #define NUM_RGB     7
 
@@ -44,6 +44,11 @@ Servo head;
 
 // PCA9685 motor driver
 
+// Last value written to each channel. A loop that drives the motors rewrites the same
+// values hundreds of times per second; the PCA9685 applies a new value only at the end of
+// a PWM cycle, so identical values are not sent again.
+static uint16_t pcaValue[16];
+
 static void pcaWrite(uint8_t reg, uint8_t val)
 {
   Wire.beginTransmission(PCA_ADDR);
@@ -52,17 +57,29 @@ static void pcaWrite(uint8_t reg, uint8_t val)
   Wire.endTransmission();
 }
 
-static void pcaBegin()
+#define PCA_1KHZ 5    // prescaler: 25 MHz / (4096 * 1 kHz) - 1, for the motors
+#define PCA_50HZ 121  // 50 Hz, when the head servo is on CH6/CH7 (motors work at 50 Hz too)
+static uint8_t pcaPrescale;
+
+static void pcaBegin(uint8_t prescale)
 {
+  pcaPrescale = prescale;
   pcaWrite(0x00, 0x10);  // MODE1: sleep, needed to change the prescaler
-  pcaWrite(0xFE, 5);     // 25 MHz / (4096 * 1 kHz) - 1
+  pcaWrite(0xFE, prescale);
   pcaWrite(0x00, 0x20);  // wake up, register auto-increment
   delay(1);
   pcaWrite(0x00, 0xA0);  // restart PWM channels
+  for (uint8_t i = 0; i < 16; i++)
+    pcaValue[i] = 0xFFFF;  // unknown: the next pcaSet writes it
 }
 
 static void pcaSet(uint8_t ch, uint16_t v)
 {
+  if (v > 4095)
+    v = 4095;
+  if (pcaValue[ch] == v)
+    return;
+  pcaValue[ch] = v;
   Wire.beginTransmission(PCA_ADDR);
   Wire.write(0x06 + 4 * ch);
   if (v >= 4095) {
@@ -75,7 +92,7 @@ static void pcaSet(uint8_t ch, uint16_t v)
   Wire.endTransmission();
 }
 
-// M1, M2 are on the left side, M3, M4 on the right side.
+// M1 rear left, M2 front left, M3 front right, M4 rear right (connectors D1-D4, assembly guide).
 static const uint8_t MOTOR_CH[4][2] = {{15, 14}, {12, 13}, {11, 10}, {8, 9}};
 
 static void motor(uint8_t m, int speed)
@@ -97,6 +114,7 @@ struct Config {
   uint8_t turnSpeed;
   uint8_t nvars;
   uint8_t wheelInvert;  // bit i set: motor M(i+1) is wired backwards
+  uint8_t headPort;     // HEAD_A1, HEAD_A2, HEAD_CH6, HEAD_CH7
 };
 
 static Config cfg;
@@ -125,6 +143,7 @@ static bool loadConfig()
   cfg.turnSpeed = progByte(11);
   cfg.nvars = progByte(12);
   cfg.wheelInvert = progByte(14);
+  cfg.headPort = progByte(15) & 3;
   uint16_t room = fromRam ? RAM_PROG : EEPROM.length();
   if (cfg.len > room - BC_HEADER || cfg.nvars > MAX_VARS)
     return false;
@@ -412,13 +431,26 @@ static int batteryPercent()
   return constrain((int)((volts - 6) / (8.4 - 6) * 100), 0, 100);
 }
 
+static uint8_t headPin;
+
 static void setHead(int angle)
 {
-  if (!head.attached())
-    head.attach(PIN_HEAD);
   if (cfg.flags & FLAG_INVERT_HEAD)
     angle = -angle;
-  head.write(constrain(90 - angle, 0, 180));
+  int a = constrain(90 - angle, 0, 180);
+  if (cfg.headPort >= HEAD_CH6) {
+    // 0.5 ms .. 2.5 ms pulses out of 20 ms, as in Adeept's PCA9685_Servo_Angle.
+    pcaSet(6 + cfg.headPort - HEAD_CH6, 102 + (uint32_t)(510 - 102) * a / 180);
+    return;
+  }
+  uint8_t pin = cfg.headPort == HEAD_A2 ? A2 : A1;
+  if (head.attached() && headPin != pin)
+    head.detach();
+  if (!head.attached()) {
+    head.attach(pin);
+    headPin = pin;
+  }
+  head.write(a);
 }
 
 static void ledsAll(uint8_t r, uint8_t g, uint8_t b)
@@ -619,6 +651,9 @@ static void runProgram()
   uint32_t timer0 = millis();
   char text[24];
 
+  uint8_t prescale = cfg.headPort >= HEAD_CH6 ? PCA_50HZ : PCA_1KHZ;
+  if (prescale != pcaPrescale)
+    pcaBegin(prescale);
   oledClear();
   clearFace();
   ledsAll(0, 0, 0);
@@ -809,8 +844,11 @@ static void runProgram()
     case OP_TIMER_RESET: timer0 = millis(); break;
 
     default:
+      // The editor is newer than this firmware: say so on the screen.
       Serial.print(F("ERR op "));
       Serial.println(op);
+      oledLine(2, "Mettre a");
+      oledLine(3, "jour SVP");
       pc = cfg.len;
       break;
     }
@@ -819,6 +857,8 @@ static void runProgram()
   noTone(PIN_BUZZER);
   if (head.attached())
     head.detach();
+  if (cfg.headPort >= HEAD_CH6)
+    pcaSet(6 + cfg.headPort - HEAD_CH6, 0);  // release the servo
   Serial.println(stopRequested ? F("STOP") : F("END"));
 }
 
@@ -960,7 +1000,7 @@ void setup()
   Serial.begin(115200);
   Wire.begin();
   Wire.setClock(400000L);
-  pcaBegin();
+  pcaBegin(PCA_1KHZ);
   stopMotors();
 
   pinMode(PIN_BUZZER, OUTPUT);

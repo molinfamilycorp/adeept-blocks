@@ -12,7 +12,7 @@
 //   12    number of variables
 //   13    sum of the code bytes, modulo 256
 //   14    wheels wired backwards: bit i for motor M(i+1) (M1, M2 left, M3, M4 right)
-//   15    reserved
+//   15    port of the head servo: HEAD_*
 // Code follows. It is a stack machine on floats; jump targets are offsets in the code.
 #pragma once
 
@@ -20,6 +20,11 @@
 #define BC_HEADER  16
 
 #define FLAG_INVERT_HEAD   0x02
+
+#define HEAD_A1  0
+#define HEAD_A2  1
+#define HEAD_CH6 2  // PCA9685 servo outputs
+#define HEAD_CH7 3
 #define FLAG_START_WITH_OK 0x04
 
 enum {

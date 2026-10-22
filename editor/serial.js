@@ -188,6 +188,13 @@ class CarLink {
     });
   }
 
+  // Runs a program once without saving it, and waits until it is over.
+  // Returns the last line: END, STOP or an error.
+  async runOnce(bytes, timeout = 20000) {
+    await this.sendProgram(bytes, true);
+    return this.exclusive(io => io.expectLine(['END', 'STOP', 'ERR'], timeout));
+  }
+
   async run() {
     return this.exclusive(async io => io.write([0x52]));  // 'R'
   }

@@ -34,6 +34,20 @@ L'enfant assemble des blocs comme « avancer de 20 cm », « tourner à droite d
 7. Cocher les cases de « Ma voiture » si besoin : roues Mecanum (ajoute les blocs « glisser »), tête inversée, démarrage par la touche OK.
 8. Section « Capteurs en direct » : vérifier que la distance, les capteurs de ligne et la télécommande réagissent.
 
+## Checkup
+
+Le bouton **🩺 Checkup** vérifie la voiture pas à pas. Chaque étape envoie un petit programme, et tu réponds à ce que tu as vu :
+
+- écran, yeux, lumières, son ;
+- chaque roue, voiture sur une boîte ;
+- avancer, tourner, « rouler », et « rouler » répété en boucle, voiture au sol ;
+- la tête : sur A1 comme dans la notice, puis A2, CH6 et CH7 si elle ne bouge pas, puis son sens ;
+- les capteurs en direct : distance, ligne, lumière, télécommande, batterie.
+
+Les réponses corrigent directement les réglages : sens des roues, prise et sens de la tête. À la fin, **Copier le rapport** donne un résumé à envoyer pour demander de l'aide. Le checkup demande le programme de base v4 ou plus récent, et propose de l'installer.
+
+Selon la notice d'Adeept, les fils des moteurs doivent avoir des couleurs opposées d'un côté à l'autre. Si un côté est câblé comme l'autre, ses roues tournent à l'envers : le checkup le détecte et le corrige.
+
 ## Utilisation par l'enfant
 
 - **▶️ Simuler** : la voiture roule à l'écran, avec le même programme. Le bloc en cours s'allume. Il y a une piste noire pour le suivi de ligne, une boîte rouge comme obstacle et une lampe dans le coin. La télécommande à l'écran (ou les flèches du clavier) remplace la vraie.
@@ -93,7 +107,8 @@ Les exemples sont écrits dans `tools/build_examples.js`. `node tools/build_exam
   - `P` + longueur + octets + somme enregistre un programme, avec un accusé `.` tous les 32 octets ;
   - `X` fait de même en RAM et l'exécute une fois ;
   - `R` lance le programme, `S` l'arrête, `D` envoie les capteurs.
-- `tools/build_firmware.sh` recompile le firmware et met à jour `editor/firmware.js`, avec `arduino-cli` et le cœur `arduino:avr`.
+- `tools/build_firmware.sh` recompile le firmware et met à jour `editor/firmware.js`, avec `arduino-cli` et le cœur `arduino:avr`. Il faut augmenter `FW_VERSION` à chaque changement du firmware : l'éditeur propose alors la mise à jour à la connexion.
+- Les scripts de l'éditeur sont chargés avec `?v=N` dans `editor/index.html`. Il faut augmenter ce numéro à chaque publication, sinon un navigateur, ou le cache de GitHub Pages, peut mélanger anciens et nouveaux fichiers.
 - `tools/hosttest/` compile le firmware pour l'ordinateur avec du faux matériel. Il rejoue un programme compilé par l'éditeur et affiche moteurs, sons, LED, yeux et écran :
   ```bash
   c++ -std=c++17 -I tools/hosttest/stubs -include cstdarg -x c++ tools/hosttest/hosttest.cpp -o hosttest
