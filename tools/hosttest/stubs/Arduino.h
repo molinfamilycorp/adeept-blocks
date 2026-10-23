@@ -6,15 +6,25 @@
 #include <cstring>
 #include <cmath>
 #include <deque>
+#include <fstream>
+#include <sstream>
 #include <string>
+#include <vector>
 #include <avr/pgmspace.h>
 
 typedef uint8_t byte;
-using std::round;
 using std::fabs;
 using std::floor;
 using std::fmod;
 using std::lround;
+
+// The same function-like macros as the AVR core's Arduino.h: they evaluate their
+// arguments several times, which the tests must reproduce.
+#define min(a,b) ((a)<(b)?(a):(b))
+#define max(a,b) ((a)>(b)?(a):(b))
+#define abs(x) ((x)>0?(x):-(x))
+#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
+#define round(x)     ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
 
 #define HIGH 1
 #define LOW 0
@@ -28,8 +38,6 @@ using std::lround;
 #define A6 20
 #define A7 21
 
-template <class T, class L, class H> T constrain(T v, L lo, H hi) { return v < lo ? lo : v > hi ? hi : v; }
-inline long abs(long v) { return v < 0 ? -v : v; }
 
 uint32_t millis();
 uint32_t micros();

@@ -17,7 +17,7 @@
 #include "faces.h"
 #include "bytecode.h"
 
-#define FW_VERSION 4
+#define FW_VERSION 5
 
 #define PIN_IR      2
 #define PIN_BUZZER  3
@@ -44,9 +44,8 @@ Servo head;
 
 // PCA9685 motor driver
 
-// Last value written to each channel. A loop that drives the motors rewrites the same
-// values hundreds of times per second; the PCA9685 applies a new value only at the end of
-// a PWM cycle, so identical values are not sent again.
+// Last value written to each channel. A loop that drives the motors asks for the same
+// values hundreds of times per second: they are only sent when they change.
 static uint16_t pcaValue[16];
 
 static void pcaWrite(uint8_t reg, uint8_t val)
@@ -610,6 +609,8 @@ static void push(float v)
     stack[sp++] = v;
 }
 
+// Careful: Arduino's constrain(), round(), abs(), min(), max() are macros that evaluate their
+// argument several times. Never pass pop() to them: store it in a variable first.
 static float pop()
 {
   return sp ? stack[--sp] : 0;
@@ -704,7 +705,7 @@ static void runProgram()
       break;
     case OP_NEG: push(-pop()); break;
     case OP_ABS: push(fabs(pop())); break;
-    case OP_ROUND: push(round(pop())); break;
+    case OP_ROUND: a = pop(); push(round(a)); break;
     case OP_RANDOM: b = pop(); a = pop(); push(randomBetween(a, b)); break;
 
     case OP_LT: b = pop(); a = pop(); push(a < b); break;
@@ -749,7 +750,8 @@ static void runProgram()
       driveMode(lastDrive, driveSpeed);
       break;
     case OP_SPEED:
-      driveSpeed = constrain((int)pop(), 0, 100);
+      a = pop();
+      driveSpeed = constrain((int)a, 0, 100);
       if (lastDrive != DRIVE_STOP)
         driveMode(lastDrive, driveSpeed);
       break;
@@ -761,7 +763,8 @@ static void runProgram()
     case OP_WHEEL: {
       uint8_t i = fetch() & 3;
       lastDrive = DRIVE_STOP;
-      wheel(i, constrain((int)pop(), -100, 100));
+      a = pop();
+      wheel(i, constrain((int)a, -100, 100));
       break;
     }
 
@@ -792,7 +795,8 @@ static void runProgram()
       break;
     }
     case OP_BRIGHT:
-      pixels.setBrightness(constrain(pop(), 0, 100) * 255 / 100);
+      a = pop();
+      pixels.setBrightness(constrain(a, 0, 100) * 255 / 100);
       pixels.show();
       break;
 

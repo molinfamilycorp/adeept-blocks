@@ -117,6 +117,12 @@ const CHECKUP_STEPS = [
     answers: [YES, {label: '↪️ Elle a tourné', result: 'fail'}, {label: '❌ Elle n\'a pas bougé', result: 'fail'}],
   },
   {
+    id: 'speed', group: 'Déplacements (voiture au sol)', title: 'Blocs « vitesse rapide » puis « rouler »',
+    program: () => testProgram(e => { e.push(85); e.emit(OP.SPEED, OP.DRIVE, 1); pause(e, 1); e.emit(OP.DRIVE, 0); }),
+    question: 'A-t-elle roulé tout droit, plus vite que tout à l\'heure, pendant 1 seconde ?',
+    answers: [YES, {label: '🐢 Pas plus vite', result: 'fail'}, {label: '❌ Elle n\'a pas bougé', result: 'fail'}],
+  },
+  {
     id: 'driveLoop', group: 'Déplacements (voiture au sol)', title: '« Rouler » répété en boucle',
     setup: 'Comme dans le programme de la voiture télécommandée : la commande « rouler » est répétée sans arrêt pendant 1,5 seconde.',
     program: () => testProgram(e => {

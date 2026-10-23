@@ -113,5 +113,6 @@ Les exemples sont écrits dans `tools/build_examples.js`. `node tools/build_exam
   ```bash
   c++ -std=c++17 -I tools/hosttest/stubs -include cstdarg -x c++ tools/hosttest/hosttest.cpp -o hosttest
   ```
+- Piège Arduino : `constrain`, `round`, `abs`, `min` et `max` sont des macros qui évaluent leur argument plusieurs fois. Dans le firmware, on ne leur passe jamais `pop()` directement. Les faux en-têtes de `tools/hosttest/stubs` reprennent exactement ces macros pour que les tests attrapent ce genre d'erreur.
 - `tools/gen_faces.py` régénère les visages de la matrice pour le firmware et pour l'éditeur.
 - Blockly 12.3.1 (Apache 2.0) est copié dans `editor/vendor/blockly`.
