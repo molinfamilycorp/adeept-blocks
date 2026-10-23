@@ -1,7 +1,7 @@
 // Runs the firmware on a computer with fake hardware, to test the USB protocol
 // and the bytecode interpreter against programs compiled by the editor.
 //
-// Usage: hosttest <program.hex> [X | K<nec command in hex>]   (the image as hex bytes separated by spaces)
+// Usage: hosttest <program.hex> [X | K<nec command in hex> | I<nec command in hex>]   (the image as hex bytes separated by spaces)
 // Prints what the car would do: motors, sounds, lights, eyes, screen.
 
 #include "Arduino.h"
@@ -34,10 +34,15 @@ static void logf(const char *fmt, ...)
 // then the program is stopped at 4 s.
 static int holdKeyCmd = -1;
 static uint64_t nextIrUs = 1000000;
+static bool idleMode, idleDSent;
 
 static void remote()
 {
-  if (holdKeyCmd >= 0 && nowUs > 4000000 && Serial.in.empty()) {
+  if (idleMode && !idleDSent && nowUs > 2000000) {
+    Serial.in.push_back('D');  // the checkup reads the sensors while the key is held
+    idleDSent = true;
+  }
+  if (!idleMode && holdKeyCmd >= 0 && nowUs > 4000000 && Serial.in.empty()) {
     Serial.in.push_back('S');  // stop the endless program
     holdKeyCmd = -1;
   }
@@ -203,8 +208,10 @@ int main(int argc, char **argv)
   // "X" as second argument: run once from RAM, like the calibration buttons.
   bool ram = argc > 2 && argv[2][0] == 'X';
   // "K18" as second argument: hold the remote key with NEC command 0x18 (up).
-  if (argc > 2 && argv[2][0] == 'K')
+  // "I1C" as second argument: same, but the car stays idle (program saved, not started).
+  if (argc > 2 && (argv[2][0] == 'K' || argv[2][0] == 'I'))
     holdKeyCmd = std::stoi(argv[2] + 1, nullptr, 16);
+  idleMode = argc > 2 && argv[2][0] == 'I';
   Serial.in.push_back(ram ? 'X' : 'P');
   Serial.in.push_back(prog.size() & 0xFF);
   Serial.in.push_back(prog.size() >> 8);
@@ -214,12 +221,19 @@ int main(int argc, char **argv)
     sum += b;
   }
   Serial.in.push_back(sum);
-  if (!ram)
+  if (!ram && !idleMode)
     Serial.in.push_back('R');
   for (int i = 0; i < 3; i++)
     Serial.in.push_back('D');  // the settings window reads the sensors meanwhile
-  for (int i = 0; i < 200 && nowUs < 6000000 && Serial.out.find("END") == std::string::npos && Serial.out.find("STOP") == std::string::npos; i++)
+  for (int i = 0; idleMode ? nowUs < 6000000 : i < 200 && nowUs < 6000000; i++) {
+    if (idleMode) {
+      nowUs += 1000;  // loop() itself takes no virtual time
+      remote();
+    }
+    if (!idleMode && (Serial.out.find("END") != std::string::npos || Serial.out.find("STOP") != std::string::npos))
+      break;
     loop();
+  }
   printf("--- serial output ---\n%s", Serial.out.c_str());
-  return Serial.out.find("END") != std::string::npos ? 0 : 1;
+  return idleMode || Serial.out.find("END") != std::string::npos ? 0 : 1;
 }

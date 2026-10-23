@@ -209,8 +209,11 @@ class CarLink {
       io.flush();
       await io.write([0x44]);  // 'D'
       const line = await io.expectLine(['D '], 1000);
-      const [dist, l, m, r, light, battery, key] = line.slice(2).split(' ').map(Number);
-      return {dist, line: [l, m, r], light, battery, key};
+      // Firmware v6 adds the last key (even released), a count of frames, the raw NEC
+      // command (even unknown) and a count of frames with a bad checksum.
+      const [dist, l, m, r, light, battery, key, lastKey = -1, keyCount = 0, lastCmd = -1, badFrames = 0] =
+        line.slice(2).split(' ').map(Number);
+      return {dist, line: [l, m, r], light, battery, key, lastKey, keyCount, lastCmd, badFrames};
     });
   }
 }

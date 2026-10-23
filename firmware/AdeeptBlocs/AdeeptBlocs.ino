@@ -17,7 +17,7 @@
 #include "faces.h"
 #include "bytecode.h"
 
-#define FW_VERSION 5
+#define FW_VERSION 6
 
 #define PIN_IR      2
 #define PIN_BUZZER  3
@@ -190,6 +190,9 @@ static volatile uint8_t irState, irCount;
 static volatile bool irNew, irRepeat;
 static int8_t lastKey = -1;
 static uint32_t lastKeyMs;
+// For the checkup: frames received, last NEC command (even unknown) and frames with a bad checksum.
+static uint8_t keyCount, badFrames;
+static int16_t lastCmd = -1;
 
 static void irIsr()
 {
@@ -241,7 +244,11 @@ static bool irService()
   interrupts();
   if (gotNew) {
     uint8_t cmd = v >> 16, inv = v >> 24;
-    if ((uint8_t)(cmd ^ inv) == 0xFF) {
+    if ((uint8_t)(cmd ^ inv) != 0xFF) {
+      badFrames++;
+    } else {
+      keyCount++;
+      lastCmd = cmd;
       lastKey = -1;
       for (uint8_t k = 0; k < 17; k++)
         if (pgm_read_byte(&IR_CODES[k]) == cmd)
@@ -930,7 +937,15 @@ static void reportSensors()
   Serial.print(' ');
   Serial.print(batteryPercent());
   Serial.print(' ');
-  Serial.println(keyHeld(lastKey) ? lastKey : -1);
+  Serial.print(keyHeld(lastKey) ? lastKey : -1);
+  Serial.print(' ');
+  Serial.print(lastKey);
+  Serial.print(' ');
+  Serial.print(keyCount);
+  Serial.print(' ');
+  Serial.print(lastCmd);
+  Serial.print(' ');
+  Serial.println(badFrames);
 }
 
 static void idleScreen(bool valid)
@@ -952,13 +967,20 @@ static void afterRun()
   autoStartAt = 0;
 }
 
+// While the editor talks to the car (checkup...), OK on the remote does not start the program.
+static uint32_t lastEditorMs;
+static bool editorSeen;
+
 static void handleSerial()
 {
   int c = Serial.read();
   if (c < 0)
     return;
-  if (c == '?' || c == 'P' || c == 'X' || c == 'R' || c == 'D' || c == 'S')
+  if (c == '?' || c == 'P' || c == 'X' || c == 'R' || c == 'D' || c == 'S') {
     autoStartAt = 0;
+    lastEditorMs = millis();
+    editorSeen = true;
+  }
   switch (c) {
   case '?':
     Serial.print(F("ADEEPTBLOCS "));
@@ -1034,7 +1056,7 @@ void setup()
 void loop()
 {
   handleSerial();
-  if (irService() && lastKey == KEY_OK) {
+  if (irService() && lastKey == KEY_OK && (!editorSeen || millis() - lastEditorMs > 5000)) {
     autoStartAt = 0;
     fromRam = false;
     if (loadConfig()) {

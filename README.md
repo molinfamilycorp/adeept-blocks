@@ -42,7 +42,8 @@ Le bouton **🩺 Checkup** vérifie la voiture pas à pas. Chaque étape envoie 
 - chaque roue, voiture sur une boîte ;
 - avancer, tourner, « rouler », et « rouler » répété en boucle, voiture au sol ;
 - la tête : sur A1 comme dans la notice, puis A2, CH6 et CH7 si elle ne bouge pas, puis son sens ;
-- les capteurs en direct : distance, ligne, lumière, télécommande, batterie.
+- les capteurs en direct : distance, ligne, lumière, batterie ;
+- la télécommande : une télécommande dessinée à l'écran, dont chaque touche passe au vert quand la voiture l'a décodée, avec le code reçu (même inconnu) et les trames abîmées ; puis une touche tenue.
 
 Les réponses corrigent directement les réglages : sens des roues, prise et sens de la tête. À la fin, **Copier le rapport** donne un résumé à envoyer pour demander de l'aide. Le checkup demande le programme de base v4 ou plus récent, et propose de l'installer.
 

@@ -147,6 +147,15 @@
     font-family: Menlo, Consolas, monospace; font-size: 18px; background: #f5f7fb;
     padding: 10px 12px; border-radius: 8px; margin: 8px 0;
   }
+  .cu-keys { display: grid; grid-template-columns: repeat(3, 52px); gap: 6px; justify-content: center; }
+  .cu-keys span {
+    height: 34px; border-radius: 8px; background: #dde3ec; color: #333; font-size: 15px;
+    display: flex; align-items: center; justify-content: center; font-family: inherit;
+  }
+  .cu-keys span.empty { background: none; }
+  .cu-keys span.seen { background: var(--green); color: #fff; }
+  .cu-keys span.held { outline: 3px solid var(--blue); }
+  .cu-keyinfo { font-size: 13px; margin-top: 10px; text-align: center; font-family: inherit; }
   .cu-report {
     font-size: 12px; background: #f5f7fb; padding: 10px; border-radius: 8px;
     white-space: pre-wrap; max-height: 40vh; overflow: auto;
@@ -297,14 +306,14 @@
 <script src="vendor/blockly/blockly_compressed.js"></script>
 <script src="vendor/blockly/blocks_compressed.js"></script>
 <script src="vendor/blockly/msg/fr.js"></script>
-<script src="faces.js?v=5"></script>
-<script src="examples.js?v=5"></script>
-<script src="firmware.js?v=5"></script>
-<script src="blocks.js?v=5"></script>
-<script src="compiler.js?v=5"></script>
-<script src="simulator.js?v=5"></script>
-<script src="serial.js?v=5"></script>
-<script src="app.js?v=5"></script>
-<script src="checkup.js?v=5"></script>
+<script src="faces.js?v=6"></script>
+<script src="examples.js?v=6"></script>
+<script src="firmware.js?v=6"></script>
+<script src="blocks.js?v=6"></script>
+<script src="compiler.js?v=6"></script>
+<script src="simulator.js?v=6"></script>
+<script src="serial.js?v=6"></script>
+<script src="app.js?v=6"></script>
+<script src="checkup.js?v=6"></script>
 </body>
 </html>

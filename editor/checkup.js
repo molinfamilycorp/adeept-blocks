@@ -7,6 +7,55 @@ const WHEEL_PLACES = ['arrière gauche', 'avant gauche', 'avant droite', 'arriè
 const SCREEN_PLACES = ['arr gauche', 'av gauche', 'av droite', 'arr droite'];
 const HEAD_PORTS = ['A1', 'A2', 'CH6', 'CH7'];
 const KEY_NAMES = {10: '*', 11: '#', 12: '▲', 13: '▼', 14: '◀', 15: '▶', 16: 'OK'};
+const keyName = k => KEY_NAMES[k] ?? String(k);
+const hex2 = n => '0x' + n.toString(16).toUpperCase().padStart(2, '0');
+// The 17 keys as laid out on Adeept's remote (null = empty cell).
+const REMOTE_LAYOUT = [null, 12, null, 14, 16, 15, null, 13, null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11];
+
+// Remote control drawn on screen: each key turns green once the car has decoded it.
+function remotePanel(step, box) {
+  const state = step.state = {seen: new Set(), unknown: new Set(), count: null, bad: null, badNow: 0};
+  box.className = 'cu-remote';
+  const grid = document.createElement('div');
+  grid.className = 'cu-keys';
+  const cells = {};
+  for (const k of REMOTE_LAYOUT) {
+    const cell = document.createElement('span');
+    if (k === null) {
+      cell.className = 'empty';
+    } else {
+      cell.textContent = keyName(k);
+      cells[k] = cell;
+    }
+    grid.appendChild(cell);
+  }
+  const info = document.createElement('div');
+  info.className = 'cu-keyinfo';
+  info.textContent = 'Appuie sur une touche…';
+  box.append(grid, info);
+  return s => {
+    if (state.count === null) {
+      // First answer: older presses do not count.
+      state.count = s.keyCount;
+      state.bad = s.badFrames;
+    } else if (s.keyCount !== state.count) {
+      state.count = s.keyCount;
+      if (s.lastKey >= 0)
+        state.seen.add(s.lastKey);
+      else if (s.lastCmd >= 0)
+        state.unknown.add(hex2(s.lastCmd));
+    }
+    state.badNow = (s.badFrames - state.bad + 256) % 256;
+    for (const [k, cell] of Object.entries(cells)) {
+      cell.classList.toggle('seen', state.seen.has(Number(k)));
+      cell.classList.toggle('held', s.key === Number(k));
+    }
+    const last = s.lastCmd < 0 ? '—' : `${hex2(s.lastCmd)} ${s.lastKey >= 0 ? '(' + keyName(s.lastKey) + ')' : '(inconnu)'}`;
+    info.textContent = `${state.seen.size} touches sur 17 · dernier code reçu : ${last}` +
+      (state.unknown.size ? ` · codes inconnus : ${[...state.unknown].join(', ')}` : '') +
+      (state.badNow ? ` · trames abîmées : ${state.badNow}` : '');
+  };
+}
 
 // Helpers to write the test programs directly in bytecode.
 function say(e, line, text) {
@@ -191,7 +240,23 @@ const CHECKUP_STEPS = [
       {label: '🔢 Elle ne change pas', result: 'fail'}],
   },
   {
-    id: 'remote', group: 'Capteurs (valeurs en direct)', title: 'Télécommande',
+    id: 'remoteKeys', group: 'Capteurs (valeurs en direct)', title: 'Touches de la télécommande',
+    panel: remotePanel,
+    setup: 'Vise la voiture avec la télécommande et appuie sur chaque touche, une à la fois, sans te presser. Pendant ce test, OK ne lance pas le programme.',
+    question: 'Toutes les touches sont-elles devenues vertes ?',
+    answers: [YES, {label: '🟡 Certaines restent grises', result: 'fail'}, {label: '❌ Aucune ne s\'allume', result: 'fail'}],
+    reportNote: step => {
+      const st = step.state;
+      if (!st)
+        return '';
+      const missing = REMOTE_LAYOUT.filter(k => k !== null && !st.seen.has(k)).map(keyName);
+      return [missing.length ? 'non reçues : ' + missing.join(' ') : 'toutes reçues',
+        st.unknown.size ? 'codes inconnus : ' + [...st.unknown].join(' ') : '',
+        st.badNow ? 'trames abîmées : ' + st.badNow : ''].filter(Boolean).join(', ');
+    },
+  },
+  {
+    id: 'remote', group: 'Capteurs (valeurs en direct)', title: 'Touche tenue',
     live: s => `Touche : ${s.key < 0 ? '—' : (KEY_NAMES[s.key] || s.key)}`,
     setup: 'Vise la voiture avec la télécommande. Appuie sur ▲ et garde le doigt dessus 3 secondes.',
     question: 'La flèche ▲ reste-t-elle affichée tant que tu appuies ?',
@@ -242,7 +307,8 @@ class Checkup {
       result = answer.fix() || result;
       saveJSON('adeept.settings', settings);
     }
-    this.results[step.id] = {title: step.title, answer: answer.label, result, note: answer.note};
+    const note = [answer.note, step.reportNote && step.reportNote(step)].filter(Boolean).join(' ; ');
+    this.results[step.id] = {title: step.title, answer: answer.label, result, note};
     if (step.id.startsWith('head') && result !== 'fail')
       // The head was found on this port: the ports tried before are not problems.
       for (const r of Object.entries(this.results))
@@ -299,19 +365,24 @@ class Checkup {
     skip.onclick = () => this.record(step, {label: 'passé', result: 'skip'});
     answers.appendChild(skip);
 
-    if (step.live) {
+    if (step.live || step.panel) {
       const live = document.createElement('div');
       live.className = 'cu-live';
-      live.textContent = '…';
+      if (!step.panel)
+        live.textContent = '…';
       body.insertBefore(live, question);
+      const update = step.panel ? step.panel(step, live) : s => { live.textContent = step.live(s); };
       const poll = async () => {
         if (!link.connected || link.busy)
           return;
+        let s;
         try {
-          live.textContent = step.live(await link.sensors());
+          s = await link.sensors();
         } catch (e) {
           live.textContent = 'Pas de réponse de la voiture.';
+          return;
         }
+        update(s);
       };
       poll();
       this.liveTimer = setInterval(poll, 300);
